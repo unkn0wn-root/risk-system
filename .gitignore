@@ -1,0 +1,14 @@
+.git
+.env*
+.vscode
+.idea
+
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore test files
+*_test.go
+testdata/

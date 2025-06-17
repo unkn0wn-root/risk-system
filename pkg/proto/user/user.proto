@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package user;
+option go_package = "user-risk-system/shared/proto/user";
+
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string phone = 5;
+  repeated string roles = 6;
+  bool is_active = 7;
+  bool is_verified = 8;
+  google.protobuf.Timestamp last_login_at = 9;
+  google.protobuf.Timestamp created_at = 10;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+}
+
+message CreateUserResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string phone = 5;
+}
+
+message RegisterResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+}
+
+message UpdateUserResponse {
+  User user = 1;
+  string error = 2;
+}

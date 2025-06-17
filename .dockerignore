@@ -1,0 +1,24 @@
+.git
+.gitignore
+README.md
+Makefile
+.env*
+.vscode
+.idea
+*.md
+
+# Ignore build artifacts
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore test files
+*_test.go
+testdata/
+
+# Ignore Docker files (except the one being used)
+docker-compose*.yml
+!docker-compose.yml
+Dockerfile*

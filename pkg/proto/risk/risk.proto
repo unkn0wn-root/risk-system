@@ -1,0 +1,136 @@
+syntax = "proto3";
+package risk;
+option go_package = "user-risk-system/shared/proto/risk";
+
+service RiskService {
+  rpc CheckRisk(RiskCheckRequest) returns (RiskCheckResponse);
+}
+
+// NEW: Admin service for managing rules
+service RiskAdminService {
+  rpc CreateRiskRule(CreateRiskRuleRequest) returns (CreateRiskRuleResponse);
+  rpc UpdateRiskRule(UpdateRiskRuleRequest) returns (UpdateRiskRuleResponse);
+  rpc DeleteRiskRule(DeleteRiskRuleRequest) returns (DeleteRiskRuleResponse);
+  rpc ListRiskRules(ListRiskRulesRequest) returns (ListRiskRulesResponse);
+  rpc GetRiskStats(GetRiskStatsRequest) returns (GetRiskStatsResponse);
+}
+
+message RiskCheckRequest {
+  string user_id = 1;
+  string email = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string phone = 5; // Optional: add phone support
+}
+
+message RiskCheckResponse {
+  string user_id = 1;
+  bool is_risky = 2;
+  string risk_level = 3; // LOW, MEDIUM, HIGH, CRITICAL
+  string reason = 4;
+  repeated string flags = 5;
+}
+
+// NEW: Admin API messages
+message RiskRule {
+  string id = 1;
+  string name = 2;
+  string type = 3; // EMAIL_BLACKLIST, NAME_BLACKLIST, PATTERN_MATCH, DOMAIN_BLACKLIST, CONTAINS
+  string category = 4; // EMAIL, NAME, PHONE
+  string value = 5; // The actual value or pattern
+  int32 score = 6; // Risk score to add
+  bool is_active = 7;
+  string source = 8; // MANUAL, EXTERNAL_API, ML_MODEL
+  double confidence = 9; // 0.0 to 1.0
+  int64 created_at = 10; // Unix timestamp
+  int64 updated_at = 11; // Unix timestamp
+  int64 expires_at = 12; // Unix timestamp (0 = never expires)
+}
+
+message CreateRiskRuleRequest {
+  string name = 1;
+  string type = 2;
+  string category = 3;
+  string value = 4;
+  int32 score = 5;
+  bool is_active = 6;
+  double confidence = 7;
+  int32 expires_in_days = 8; // 0 = never expires
+}
+
+message CreateRiskRuleResponse {
+  string rule_id = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+message UpdateRiskRuleRequest {
+  string rule_id = 1;
+  string name = 2;
+  string type = 3;
+  string category = 4;
+  string value = 5;
+  int32 score = 6;
+  bool is_active = 7;
+  double confidence = 8;
+  int32 expires_in_days = 9;
+}
+
+message UpdateRiskRuleResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message DeleteRiskRuleRequest {
+  string rule_id = 1;
+}
+
+message DeleteRiskRuleResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message ListRiskRulesRequest {
+  string category = 1; // Optional: filter by category
+  string type = 2; // Optional: filter by type
+  bool active_only = 3; // Default: true
+  int32 page = 4; // Pagination
+  int32 page_size = 5; // Pagination
+}
+
+message ListRiskRulesResponse {
+  repeated RiskRule rules = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetRiskStatsRequest {
+  int32 days = 1; // Stats for last N days
+}
+
+message RiskStats {
+  int32 total_checks = 1;
+  int32 risky_users = 2;
+  double risk_rate = 3;
+  double avg_risk_score = 4;
+  repeated FlagCount top_flags = 5;
+  repeated TrendPoint trend_data = 6;
+}
+
+message FlagCount {
+  string flag = 1;
+  int32 count = 2;
+}
+
+message TrendPoint {
+  string date = 1; // YYYY-MM-DD format
+  int32 risk_count = 2;
+  int32 total_count = 3;
+}
+
+message GetRiskStatsResponse {
+  RiskStats stats = 1;
+  bool success = 2;
+  string error = 3;
+}
