@@ -17,15 +17,21 @@ import (
 // It provides create, read, update, and delete operations for risk rules.
 type RiskAdminHandler struct {
 	pb_risk.UnimplementedRiskAdminServiceServer
-	riskRepo *repository.RiskRepository
-	logger   *logger.Logger
+	riskRepo   *repository.RiskRepository
+	logger     *logger.Logger
+	riskEngine RiskEngineService
 }
 
-// NewRiskAdminHandler creates a new administrative handler with repository and logger dependencies.
-func NewRiskAdminHandler(riskRepo *repository.RiskRepository, logger *logger.Logger) *RiskAdminHandler {
+type RiskEngineService interface {
+	InvalidateCache()
+}
+
+// NewRiskAdminHandler creates a new administrative handler with repository, logger, and risk engine dependencies.
+func NewRiskAdminHandler(riskRepo *repository.RiskRepository, logger *logger.Logger, riskEngine RiskEngineService) *RiskAdminHandler {
 	return &RiskAdminHandler{
-		riskRepo: riskRepo,
-		logger:   logger,
+		riskRepo:   riskRepo,
+		logger:     logger,
+		riskEngine: riskEngine,
 	}
 }
 
@@ -56,6 +62,9 @@ func (h *RiskAdminHandler) CreateRiskRule(ctx context.Context, req *pb_risk.Crea
 		return nil, err
 	}
 
+	// Invalidate cache to ensure new rule is immediately available
+	h.riskEngine.InvalidateCache()
+
 	h.logger.InfoCtx(ctx, "Risk rule created", "rule_id", rule.ID, "name", rule.Name)
 
 	return &pb_risk.CreateRiskRuleResponse{
@@ -84,6 +93,8 @@ func (h *RiskAdminHandler) UpdateRiskRule(ctx context.Context, req *pb_risk.Upda
 		h.logger.ErrorCtx(ctx, "Failed to update risk rule", err)
 		return nil, err
 	}
+
+	h.riskEngine.InvalidateCache()
 
 	h.logger.InfoCtx(ctx, "Risk rule updated", "rule_id", rule.ID)
 
@@ -131,6 +142,8 @@ func (h *RiskAdminHandler) DeleteRiskRule(ctx context.Context, req *pb_risk.Dele
 		h.logger.ErrorCtx(ctx, "Failed to delete risk rule", err)
 		return nil, err
 	}
+
+	h.riskEngine.InvalidateCache()
 
 	h.logger.InfoCtx(ctx, "Risk rule deleted", "rule_id", req.RuleId)
 
