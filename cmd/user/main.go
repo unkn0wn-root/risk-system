@@ -7,11 +7,9 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	"user-risk-system/cmd/user/handlers"
-	"user-risk-system/cmd/user/models"
 	"user-risk-system/cmd/user/repository"
 	"user-risk-system/pkg/auth"
 	"user-risk-system/pkg/config"
@@ -20,6 +18,7 @@ import (
 	pb_notification "user-risk-system/pkg/proto/notification"
 	pb_risk "user-risk-system/pkg/proto/risk"
 	pb_user "user-risk-system/pkg/proto/user"
+	"user-risk-system/pkg/utils"
 )
 
 // main initializes and starts the user service with gRPC endpoints and authentication.
@@ -31,22 +30,24 @@ func main() {
 	}
 
 	logConfig := logger.LogConfig{
-		Level:       cfg.LogLevel,
+		Level:       "info",
 		Format:      "json",
-		ServiceName: "api-gateway",
+		ServiceName: cfg.ServiceName,
 		Environment: cfg.Environment,
 	}
 	appLogger := logger.New(logConfig)
 
-	// Database connection
-	db, err := gorm.Open(postgres.Open(cfg.DatabaseURL), &gorm.Config{})
+	// Database
+	db, err := utils.SetupDatabase(cfg.DatabaseURL, &gorm.Config{}, cfg, appLogger)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	if err := db.AutoMigrate(&models.User{}); err != nil {
-		appLogger.Fatalf("Failed to migrate database: %v", err)
+	sdb, err := db.DB()
+	if err != nil {
+		appLogger.Fatalf("Failed to get underlying SQL DB: %v", err)
 	}
+	defer sdb.Close()
 
 	// gRPC client connections
 	riskConn, err := grpc.Dial(cfg.RiskServiceURL, grpc.WithInsecure())

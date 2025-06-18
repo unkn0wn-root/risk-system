@@ -5,20 +5,17 @@ package main
 import (
 	"log"
 	"net"
-	"regexp"
-	"time"
 
 	"google.golang.org/grpc"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	"user-risk-system/cmd/risk-engine/handlers"
-	"user-risk-system/cmd/risk-engine/models"
 	"user-risk-system/cmd/risk-engine/repository"
 	"user-risk-system/cmd/risk-engine/services"
 	"user-risk-system/pkg/config"
 	"user-risk-system/pkg/logger"
 	pb_risk "user-risk-system/pkg/proto/risk"
+	"user-risk-system/pkg/utils"
 )
 
 // riskConfig holds the configuration specific to the risk engine service.
@@ -26,47 +23,6 @@ import (
 type riskConfig struct {
 	DatabaseURL string
 	Port        string
-}
-
-// maskPassword obscures password information in database URLs for secure logging.
-// It replaces the password parameter value with asterisks to prevent credential exposure.
-func maskPassword(databaseURL string) string {
-	re := regexp.MustCompile(`password=([^&\s]+)`)
-	return re.ReplaceAllString(databaseURL, "password=***")
-}
-
-// setupDatabase initializes the PostgreSQL database connection with optimal settings.
-// It configures the connection pool, tests connectivity, and runs auto-migration for risk models.
-func setupDatabase(databaseURL string, logger *logger.Logger) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-
-	// Configure connection pool
-	sqlDB, err := db.DB()
-	if err != nil {
-		return nil, err
-	}
-
-	// Set connection pool settings
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetConnMaxLifetime(time.Hour)
-
-	// Test the connection
-	if err := sqlDB.Ping(); err != nil {
-		return nil, err
-	}
-
-	// Run auto-migration
-	logger.Info("Running database auto-migration...")
-	if err := models.AutoMigrate(db); err != nil {
-		return nil, err
-	}
-	logger.Info("Database auto-migration completed successfully")
-
-	return db, nil
 }
 
 // main initializes and starts the risk engine service with gRPC endpoints.
@@ -92,7 +48,7 @@ func main() {
 	rl := logger.New(logConfig)
 
 	// setup database
-	db, err := setupDatabase(rcfg.DatabaseURL, rl)
+	db, err := utils.SetupDatabase(rcfg.DatabaseURL, &gorm.Config{}, cfg, rl)
 	if err != nil {
 		rl.Fatalf("Failed to setup database: %v", err)
 	}
@@ -104,7 +60,7 @@ func main() {
 	defer sqlDB.Close()
 
 	rl.Info("Risk engine configuration",
-		"database_url", maskPassword(rcfg.DatabaseURL),
+		"database_url", utils.MaskPassword(rcfg.DatabaseURL),
 		"port", rcfg.Port)
 
 	// Initialize repositories

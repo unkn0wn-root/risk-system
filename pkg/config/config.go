@@ -17,10 +17,11 @@ type Config struct {
 	LogLevel    string // Logging level (debug, info, warn, error)
 
 	// Database
-	DatabaseURL      string        // Primary database connection string
-	RiskDatabaseURL  string        // Risk assessment database connection string
-	DatabaseMaxConns int           // Maximum database connections in pool
-	DatabaseTimeout  time.Duration // Database operation timeout
+	DatabaseURL         string        // Primary database connection string
+	RiskDatabaseURL     string        // Risk assessment database connection string
+	DatabaseMaxConns    int           // Maximum database connections in pool
+	DatabaseMaxIdleConn int           // Maximum idle connection
+	DatabaseConnLiftime time.Duration // Database operation timeout
 
 	// JWT
 	JWTSecret   string        // Secret key for JWT token signing
@@ -61,17 +62,13 @@ type Config struct {
 // It applies default values where appropriate and validates required fields.
 func Load() (*Config, error) {
 	config := &Config{
-		// Using the generic Env function (Approach 1)
-		ServiceName:     Env.String("SERVICE_NAME", "user-risk-system"),
-		Port:            Env.String("PORT", "8080"),
-		Environment:     Env.String("ENVIRONMENT", "development"),
-		LogLevel:        Env.String("LOG_LEVEL", "info"),
-		DatabaseTimeout: Env.Duration("DATABASE_TIMEOUT", 30*time.Second),
-		JWTDuration:     Env.Duration("JWT_DURATION", 24*time.Hour),
-		JWTIssuer:       Env.String("JWT_ISSUER", "user-risk-system"),
+		ServiceName: Env.String("SERVICE_NAME", "user-risk-system"),
+		Port:        Env.String("PORT", "8080"),
+		Environment: Env.String("ENVIRONMENT", "development"),
+		LogLevel:    Env.String("LOG_LEVEL", "info"),
+		JWTDuration: Env.Duration("JWT_DURATION", 24*time.Hour),
+		JWTIssuer:   Env.String("JWT_ISSUER", "user-risk-system"),
 
-		// Required values
-		DatabaseURL:     Env.String("DATABASE_URL", ""),
 		RiskDatabaseURL: Env.String("RISK_DATABASE_URL", "postgres://user:password@localhost/risk_db?sslmode=disable"),
 		JWTSecret:       Env.String("JWT_SECRET", ""),
 		RabbitMQURL:     Env.String("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/"),
@@ -93,12 +90,18 @@ func Load() (*Config, error) {
 		PushProvider:      Env.String("PUSH_PROVIDER", "SIMULATE"),
 
 		// Security & Performance
-		DatabaseMaxConns:  Env.Int("DATABASE_MAX_CONNS", 25),
 		RateLimitRequests: Env.Int("RATE_LIMIT_REQUESTS", 100),
 		RateLimitWindow:   Env.Duration("RATE_LIMIT_WINDOW", time.Minute),
 		MetricsEnabled:    Env.Bool("METRICS_ENABLED", false),
 		TracingEnabled:    Env.Bool("TRACING_ENABLED", false),
 
+		// Database
+		DatabaseURL:         Env.String("DATABASE_URL", ""),
+		DatabaseConnLiftime: Env.Duration("DATABASE_CONN_LIFETIME", time.Hour),
+		DatabaseMaxIdleConn: Env.Int("DB_MAX_IDLE", 10),
+		DatabaseMaxConns:    Env.Int("DATABASE_MAX_CONNS", 25),
+
+		// Common
 		TemplatesDirectoryPath: Env.String("TEMPLATES_PATH", ""),
 	}
 
