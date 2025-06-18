@@ -41,14 +41,14 @@ A microservices-based system for user management with automated risk detection a
 Project Structure:
 ├── api-gateway/          # HTTP REST API & routing
 ├── cmd/                  # Service executables
-│   ├── user/            # User management service
-│   ├── risk-engine/     # Risk detection & analytics
-│   └── notification/    # Multi-channel notifications
-├── pkg/                 # Shared libraries
-│   ├── auth/           # JWT authentication
-│   ├── proto/          # gRPC definitions
-│   └── messaging/      # RabbitMQ client
-└── scripts/            # Database initialization
+│   ├── user/             # User management service
+│   ├── risk-engine/      # Risk detection & analytics
+│   └── notification/     # Multi-channel notifications
+├── pkg/                  # Shared libraries
+│   ├── auth/             # JWT authentication
+│   ├── proto/            # gRPC definitions
+│   └── messaging/        # RabbitMQ client
+└── scripts/              # Database initialization
 ```
 
 ### Services
