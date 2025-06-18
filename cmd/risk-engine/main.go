@@ -116,7 +116,7 @@ func main() {
 
 	// Initialize handlers
 	riskHandler := handlers.NewRiskHandler(riskEngine, riskAnalytics, rl)
-	riskAdminHandler := handlers.NewRiskAdminHandler(riskRepo, rl)
+	riskAdminHandler := handlers.NewRiskAdminHandler(riskRepo, rl, riskEngine)
 
 	// Create gRPC server
 	lis, err := net.Listen("tcp", rcfg.Port)

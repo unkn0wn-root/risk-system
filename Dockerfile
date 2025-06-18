@@ -17,7 +17,11 @@ COPY . .
 FROM base AS builder
 ARG SERVICE_NAME
 RUN echo "Building service: $SERVICE_NAME"
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/${SERVICE_NAME}/
+RUN if [ "$SERVICE_NAME" = "api-gateway" ]; then \
+        CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./api-gateway/; \
+    else \
+        CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/${SERVICE_NAME}/; \
+    fi
 
 FROM alpine:latest AS final
 
