@@ -8,12 +8,16 @@ import (
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
+// SendGridProvider implements the EmailProvider interface using SendGrid's API.
+// It handles authentication and email formatting for the SendGrid service.
 type SendGridProvider struct {
 	apiKey    string
 	fromEmail string
 	fromName  string
 }
 
+// NewSendGridProvider creates a new SendGrid email provider with the given credentials.
+// It requires an API key, sender email address, and sender name.
 func NewSendGridProvider(apiKey, fromEmail, fromName string) *SendGridProvider {
 	return &SendGridProvider{
 		apiKey:    apiKey,
@@ -22,6 +26,8 @@ func NewSendGridProvider(apiKey, fromEmail, fromName string) *SendGridProvider {
 	}
 }
 
+// SendEmail sends an email using the SendGrid API.
+// It validates the API key and handles error responses from the SendGrid service.
 func (p *SendGridProvider) SendEmail(to, subject, body string, templateData map[string]interface{}) error {
 	if p.apiKey == "" {
 		return fmt.Errorf("SendGrid API key not configured")
@@ -45,6 +51,7 @@ func (p *SendGridProvider) SendEmail(to, subject, body string, templateData map[
 	return nil
 }
 
+// GetProviderName returns the name of this email provider for logging and identification.
 func (p *SendGridProvider) GetProviderName() string {
 	return "SENDGRID"
 }

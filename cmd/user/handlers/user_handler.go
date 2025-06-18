@@ -1,3 +1,5 @@
+// Package handlers implements the user service gRPC request handlers.
+// It provides user management, authentication, and integration with risk assessment and notifications.
 package handlers
 
 import (
@@ -20,6 +22,8 @@ import (
 	"user-risk-system/pkg/scontext"
 )
 
+// UserHandler processes user-related gRPC requests and coordinates with external services.
+// It handles authentication, user management, and orchestrates risk assessment and notifications.
 type UserHandler struct {
 	pb_user.UnimplementedUserServiceServer
 	userRepo           *repository.UserRepository
@@ -29,6 +33,8 @@ type UserHandler struct {
 	logger             *logger.Logger
 }
 
+// NewUserHandler creates a new user handler with all required dependencies.
+// It initializes the handler with repository, external service clients, and messaging infrastructure.
 func NewUserHandler(
 	userRepo *repository.UserRepository,
 	riskClient pb_risk.RiskServiceClient,
@@ -45,6 +51,8 @@ func NewUserHandler(
 	}
 }
 
+// Login authenticates a user with email and password via gRPC.
+// It validates credentials, updates login timestamp, and triggers risk assessment.
 func (h *UserHandler) Login(ctx context.Context, req *pb_user.LoginRequest) (*pb_user.LoginResponse, error) {
 	ctx = scontext.New(ctx).WithUserEmail(req.Email).Build()
 	h.logger.InfoCtx(ctx, "Login attempt for email")
@@ -86,6 +94,8 @@ func (h *UserHandler) Login(ctx context.Context, req *pb_user.LoginRequest) (*pb
 	}, nil
 }
 
+// Register creates a new user account via gRPC with automatic risk assessment.
+// It validates uniqueness, hashes passwords, and triggers welcome notifications.
 func (h *UserHandler) Register(ctx context.Context, req *pb_user.RegisterRequest) (*pb_user.RegisterResponse, error) {
 	ctx = scontext.New(ctx).WithUserEmail(req.Email).Build()
 	h.logger.InfoCtx(ctx, "Registration attempt for email")
@@ -132,7 +142,8 @@ func (h *UserHandler) Register(ctx context.Context, req *pb_user.RegisterRequest
 	}, nil
 }
 
-// CreateUser creates a new user (admin function)
+// CreateUser creates a new user account via administrative gRPC endpoint.
+// It's an admin-only function that bypasses normal registration flows.
 func (h *UserHandler) CreateUser(ctx context.Context, req *pb_user.CreateUserRequest) (*pb_user.CreateUserResponse, error) {
 	ctx = scontext.New(ctx).WithUserEmail(req.Email).Build()
 	h.logger.InfoCtx(ctx, "Admin creating user")
@@ -173,6 +184,8 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *pb_user.CreateUserReq
 	}, nil
 }
 
+// GetUser retrieves user information via gRPC with role-based access control.
+// Users can only access their own data unless they have admin privileges.
 func (h *UserHandler) GetUser(ctx context.Context, req *pb_user.GetUserRequest) (*pb_user.GetUserResponse, error) {
 	userID := ctx.Value("user_id").(string)
 	userRoles := ctx.Value("user_roles").([]string)
@@ -201,6 +214,8 @@ func (h *UserHandler) GetUser(ctx context.Context, req *pb_user.GetUserRequest) 
 	}, nil
 }
 
+// UpdateUser modifies user information via gRPC with role-based access control.
+// Users can only update their own data unless they have admin privileges.
 func (h *UserHandler) UpdateUser(ctx context.Context, req *pb_user.UpdateUserRequest) (*pb_user.UpdateUserResponse, error) {
 	userID := ctx.Value("user_id").(string)
 	userRoles := ctx.Value("user_roles").([]string)
@@ -245,7 +260,8 @@ func (h *UserHandler) UpdateUser(ctx context.Context, req *pb_user.UpdateUserReq
 	}, nil
 }
 
-// Helper function to convert user model to protobuf
+// userToProto converts a user model to protobuf format for gRPC responses.
+// It handles timestamp conversion and excludes sensitive data like password hashes.
 func (h *UserHandler) userToProto(user *user_models.User) *pb_user.User {
 	pbUser := &pb_user.User{
 		Id:         user.ID,
@@ -266,7 +282,8 @@ func (h *UserHandler) userToProto(user *user_models.User) *pb_user.User {
 	return pbUser
 }
 
-// handleUserCreatedAsync async gRPC queue
+// handleUserCreatedAsync publishes user creation events to message queue for asynchronous processing.
+// It notifies other services about new user registrations via RabbitMQ.
 func (h *UserHandler) handleUserCreatedAsync(user *user_models.User) {
 	event := models.UserCreatedEvent{
 		UserID:    user.ID,
@@ -282,7 +299,8 @@ func (h *UserHandler) handleUserCreatedAsync(user *user_models.User) {
 	}
 }
 
-// handleUserCreatedSync - via grpc
+// handleUserCreatedSync performs immediate risk assessment and notification sending via gRPC.
+// It evaluates new users for risk factors and sends welcome notifications synchronously.
 func (h *UserHandler) handleUserCreatedSync(user *user_models.User) {
 	riskReq := &pb_risk.RiskCheckRequest{
 		UserId:    user.ID,
@@ -349,6 +367,8 @@ func (h *UserHandler) handleUserCreatedSync(user *user_models.User) {
 	}
 }
 
+// handleCriticalRisk processes users identified as critical security risks.
+// It automatically deactivates accounts and sends admin alerts for immediate attention.
 func (h *UserHandler) handleCriticalRisk(user *user_models.User, riskResp *pb_risk.RiskCheckResponse) {
 	ctx := context.Background()
 	ctx = scontext.New(ctx).WithUserID(user.ID).WithUserEmail(user.Email).Build()
@@ -369,6 +389,8 @@ func (h *UserHandler) handleCriticalRisk(user *user_models.User, riskResp *pb_ri
 	h.notificationClient.SendNotification(ctx, adminAlert)
 }
 
+// handleHighRisk processes users identified as high security risks.
+// It marks accounts as unverified and triggers email verification workflows.
 func (h *UserHandler) handleHighRisk(user *user_models.User, riskResp *pb_risk.RiskCheckResponse) {
 	ctx := context.Background()
 	ctx = scontext.New(ctx).WithUserID(user.ID).WithUserEmail(user.Email).Build()
@@ -389,6 +411,8 @@ func (h *UserHandler) handleHighRisk(user *user_models.User, riskResp *pb_risk.R
 	h.notificationClient.SendNotification(ctx, verificationReq)
 }
 
+// checkLoginRisk evaluates login attempts for suspicious activity patterns.
+// It performs risk assessment on login and sends alerts for critical risk scenarios.
 func (h *UserHandler) checkLoginRisk(user *user_models.User) {
 	ctx := context.Background()
 	ctx = scontext.New(ctx).WithUserID(user.ID).WithUserEmail(user.Email).Build()

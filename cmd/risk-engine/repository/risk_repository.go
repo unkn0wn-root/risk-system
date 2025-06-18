@@ -1,3 +1,5 @@
+// Package repository implements data access layer for risk engine entities.
+// It provides CRUD operations and queries for risk rules and related data.
 package repository
 
 import (
@@ -8,14 +10,19 @@ import (
 	"gorm.io/gorm"
 )
 
+// RiskRepository provides database operations for risk rules and related entities.
+// It encapsulates all database interactions for the risk engine service.
 type RiskRepository struct {
 	db *gorm.DB
 }
 
+// NewRiskRepository creates a new risk repository with the provided database connection.
 func NewRiskRepository(db *gorm.DB) *RiskRepository {
 	return &RiskRepository{db: db}
 }
 
+// GetActiveRules retrieves all active, non-expired risk rules ordered by score.
+// It filters out inactive rules and those past their expiration date.
 func (r *RiskRepository) GetActiveRules() ([]models.RiskRule, error) {
 	var rules []models.RiskRule
 
@@ -31,6 +38,8 @@ func (r *RiskRepository) GetActiveRules() ([]models.RiskRule, error) {
 	return rules, nil
 }
 
+// GetRulesByCategory retrieves active risk rules for a specific category.
+// Categories include EMAIL, NAME, PHONE for targeted rule evaluation.
 func (r *RiskRepository) GetRulesByCategory(category string) ([]models.RiskRule, error) {
 	var rules []models.RiskRule
 
@@ -46,6 +55,8 @@ func (r *RiskRepository) GetRulesByCategory(category string) ([]models.RiskRule,
 	return rules, nil
 }
 
+// CreateRule inserts a new risk rule into the database.
+// It automatically sets creation and update timestamps.
 func (r *RiskRepository) CreateRule(rule *models.RiskRule) error {
 	rule.CreatedAt = time.Now()
 	rule.UpdatedAt = time.Now()
@@ -58,6 +69,8 @@ func (r *RiskRepository) CreateRule(rule *models.RiskRule) error {
 	return nil
 }
 
+// UpdateRule modifies an existing risk rule in the database.
+// It updates the modification timestamp automatically.
 func (r *RiskRepository) UpdateRule(rule *models.RiskRule) error {
 	rule.UpdatedAt = time.Now()
 
@@ -69,6 +82,8 @@ func (r *RiskRepository) UpdateRule(rule *models.RiskRule) error {
 	return nil
 }
 
+// GetRuleByID retrieves a specific risk rule by its unique identifier.
+// It returns an error if the rule is not found.
 func (r *RiskRepository) GetRuleByID(id string) (*models.RiskRule, error) {
 	var rule models.RiskRule
 
@@ -83,6 +98,8 @@ func (r *RiskRepository) GetRuleByID(id string) (*models.RiskRule, error) {
 	return &rule, nil
 }
 
+// DeleteRule permanently removes a risk rule from the database.
+// It returns an error if the rule doesn't exist or deletion fails.
 func (r *RiskRepository) DeleteRule(id string) error {
 	result := r.db.Delete(&models.RiskRule{}, "id = ?", id)
 	if result.Error != nil {
@@ -96,6 +113,8 @@ func (r *RiskRepository) DeleteRule(id string) error {
 	return nil
 }
 
+// DeactivateRule marks a risk rule as inactive without deleting it.
+// This provides a soft delete mechanism for rule management.
 func (r *RiskRepository) DeactivateRule(id string) error {
 	result := r.db.Model(&models.RiskRule{}).
 		Where("id = ?", id).

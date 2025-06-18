@@ -1,3 +1,5 @@
+// Package main implements the risk engine service entry point.
+// This service evaluates user data against configurable risk rules and provides analytics.
 package main
 
 import (
@@ -19,16 +21,22 @@ import (
 	pb_risk "user-risk-system/pkg/proto/risk"
 )
 
+// riskConfig holds the configuration specific to the risk engine service.
+// It includes database connection details and server port information.
 type riskConfig struct {
 	DatabaseURL string
 	Port        string
 }
 
+// maskPassword obscures password information in database URLs for secure logging.
+// It replaces the password parameter value with asterisks to prevent credential exposure.
 func maskPassword(databaseURL string) string {
 	re := regexp.MustCompile(`password=([^&\s]+)`)
 	return re.ReplaceAllString(databaseURL, "password=***")
 }
 
+// setupDatabase initializes the PostgreSQL database connection with optimal settings.
+// It configures the connection pool, tests connectivity, and runs auto-migration for risk models.
 func setupDatabase(databaseURL string, logger *logger.Logger) (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
 	if err != nil {
@@ -61,6 +69,8 @@ func setupDatabase(databaseURL string, logger *logger.Logger) (*gorm.DB, error) 
 	return db, nil
 }
 
+// main initializes and starts the risk engine service with gRPC endpoints.
+// It sets up database connections, repositories, services, and handlers for risk evaluation.
 func main() {
 	cfg, err := config.Load()
 	if err != nil {

@@ -1,3 +1,5 @@
+// Package templates provides email template management and rendering functionality.
+// It supports both file-based and embedded templates with dynamic data substitution.
 package templates
 
 import (
@@ -7,12 +9,16 @@ import (
 	"path/filepath"
 )
 
+// EmailTemplate represents an email template with subject and body content.
+// It supports both HTML and text formats for multi-part emails.
 type EmailTemplate struct {
 	Subject  string
 	HTMLBody string
 	TextBody string
 }
 
+// EmailTemplateData contains the dynamic data used to populate email templates.
+// It includes user information, company details, and notification-specific data.
 type EmailTemplateData struct {
 	UserID      string
 	FirstName   string
@@ -26,12 +32,15 @@ type EmailTemplateData struct {
 	Flags       []string
 }
 
-// EmailTemplateManager handles email template rendering
+// EmailTemplateManager handles email template loading, caching, and rendering.
+// It supports both file-based templates and embedded fallback templates.
 type EmailTemplateManager struct {
 	templates map[string]*template.Template
 	baseData  EmailTemplateData
 }
 
+// NewEmailTemplateManager creates a new template manager with the specified template directory.
+// It initializes base template data and loads all available templates.
 func NewEmailTemplateManager(templateDir string) *EmailTemplateManager {
 	manager := &EmailTemplateManager{
 		templates: make(map[string]*template.Template),
@@ -46,6 +55,8 @@ func NewEmailTemplateManager(templateDir string) *EmailTemplateManager {
 	return manager
 }
 
+// loadTemplates loads email templates from files or falls back to embedded templates.
+// It maps template names to their corresponding HTML files.
 func (m *EmailTemplateManager) loadTemplates(templateDir string) {
 	templates := map[string]string{
 		"welcome":        "welcome.html",
@@ -66,6 +77,8 @@ func (m *EmailTemplateManager) loadTemplates(templateDir string) {
 	}
 }
 
+// RenderTemplate renders an email template with the provided data.
+// Returns the subject line, HTML body, and any rendering errors.
 func (m *EmailTemplateManager) RenderTemplate(templateName string, data EmailTemplateData) (string, string, error) {
 	data.CompanyName = m.baseData.CompanyName
 	data.SupportURL = m.baseData.SupportURL
@@ -86,6 +99,8 @@ func (m *EmailTemplateManager) RenderTemplate(templateName string, data EmailTem
 	return m.getSubject(templateName, data), htmlBuf.String(), nil
 }
 
+// getSubject generates the email subject line based on template type and data.
+// It personalizes subjects with user names and notification details.
 func (m *EmailTemplateManager) getSubject(templateName string, data EmailTemplateData) string {
 	subjects := map[string]string{
 		"welcome":        fmt.Sprintf("Welcome to %s, %s!", data.CompanyName, data.FirstName),
@@ -100,6 +115,8 @@ func (m *EmailTemplateManager) getSubject(templateName string, data EmailTemplat
 	return "Notification from " + data.CompanyName
 }
 
+// getEmbeddedTemplate returns hardcoded HTML templates as fallbacks.
+// These are used when template files are not available in the filesystem.
 func (m *EmailTemplateManager) getEmbeddedTemplate(name string) *template.Template {
 	templates := map[string]string{
 		"welcome": `

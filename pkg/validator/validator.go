@@ -1,3 +1,5 @@
+// Package validator provides a fluent validation framework for input data validation.
+// It supports common validation rules and collects multiple validation errors.
 package validator
 
 import (
@@ -6,13 +8,16 @@ import (
 	"strings"
 )
 
+// ValidationError represents a single validation failure for a specific field.
 type ValidationError struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
+	Field   string `json:"field"`   // Name of the field that failed validation
+	Message string `json:"message"` // Human-readable validation error message
 }
 
+// ValidationErrors is a collection of validation errors that implements the error interface.
 type ValidationErrors []ValidationError
 
+// Error implements the error interface by combining all validation errors into a single message.
 func (v ValidationErrors) Error() string {
 	var messages []string
 	for _, err := range v {
@@ -21,14 +26,19 @@ func (v ValidationErrors) Error() string {
 	return strings.Join(messages, ", ")
 }
 
+// Validator provides a fluent interface for validating data and collecting errors.
+// It allows chaining multiple validation rules and returns all errors at once.
 type Validator struct {
-	errors ValidationErrors
+	errors ValidationErrors // Collection of validation errors encountered
 }
 
+// New creates a new validator instance with an empty error collection.
 func New() *Validator {
 	return &Validator{errors: make(ValidationErrors, 0)}
 }
 
+// Required validates that a string field is not empty after trimming whitespace.
+// Returns the validator for method chaining.
 func (v *Validator) Required(field, value string) *Validator {
 	if strings.TrimSpace(value) == "" {
 		v.errors = append(v.errors, ValidationError{
@@ -39,6 +49,8 @@ func (v *Validator) Required(field, value string) *Validator {
 	return v
 }
 
+// Email validates that a string field contains a valid email address format.
+// Skips validation if the value is empty. Returns the validator for method chaining.
 func (v *Validator) Email(field, value string) *Validator {
 	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$`)
 	if value != "" && !emailRegex.MatchString(strings.ToLower(value)) {
@@ -50,6 +62,8 @@ func (v *Validator) Email(field, value string) *Validator {
 	return v
 }
 
+// MinLength validates that a string field meets the minimum length requirement.
+// Returns the validator for method chaining.
 func (v *Validator) MinLength(field, value string, length int) *Validator {
 	if len(value) < length {
 		v.errors = append(v.errors, ValidationError{
@@ -60,6 +74,8 @@ func (v *Validator) MinLength(field, value string, length int) *Validator {
 	return v
 }
 
+// Phone validates that a string field contains a valid phone number format.
+// Accepts international formats with optional + prefix. Skips validation if empty.
 func (v *Validator) Phone(field, value string) *Validator {
 	phoneRegex := regexp.MustCompile(`^\+?[1-9]\d{1,14}$`)
 	if value != "" && !phoneRegex.MatchString(value) {
@@ -71,6 +87,8 @@ func (v *Validator) Phone(field, value string) *Validator {
 	return v
 }
 
+// Min validates that a numeric field meets the minimum value requirement.
+// Returns the validator for method chaining.
 func (v *Validator) Min(field string, value float64, min float64) *Validator {
 	if value < min {
 		v.errors = append(v.errors, ValidationError{
@@ -81,6 +99,8 @@ func (v *Validator) Min(field string, value float64, min float64) *Validator {
 	return v
 }
 
+// Max validates that a numeric field does not exceed the maximum value.
+// Returns the validator for method chaining.
 func (v *Validator) Max(field string, value float64, max float64) *Validator {
 	if value > max {
 		v.errors = append(v.errors, ValidationError{
@@ -91,10 +111,12 @@ func (v *Validator) Max(field string, value float64, max float64) *Validator {
 	return v
 }
 
+// IsValid returns true if no validation errors have been collected.
 func (v *Validator) IsValid() bool {
 	return len(v.errors) == 0
 }
 
+// Errors returns the collection of validation errors encountered during validation.
 func (v *Validator) Errors() ValidationErrors {
 	return v.errors
 }

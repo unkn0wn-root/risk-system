@@ -1,3 +1,5 @@
+// Package services implements analytics and reporting for risk engine operations.
+// It provides statistical analysis, trend data, and historical risk assessment storage.
 package services
 
 import (
@@ -10,11 +12,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// RiskAnalytics provides statistical analysis and reporting for risk assessments.
+// It stores risk check results and generates analytics data for monitoring and reporting.
 type RiskAnalytics struct {
 	db     *gorm.DB
 	logger *logger.Logger
 }
 
+// NewRiskAnalytics creates a new analytics service with database and logger dependencies.
 func NewRiskAnalytics(db *gorm.DB, logger *logger.Logger) *RiskAnalytics {
 	return &RiskAnalytics{
 		db:     db,
@@ -22,6 +27,8 @@ func NewRiskAnalytics(db *gorm.DB, logger *logger.Logger) *RiskAnalytics {
 	}
 }
 
+// RiskStats represents aggregated risk assessment statistics.
+// It includes counts, rates, scores, and trend data for reporting dashboards.
 type RiskStats struct {
 	TotalChecks  int64        `json:"total_checks"`
 	RiskyUsers   int64        `json:"risky_users"`
@@ -31,17 +38,23 @@ type RiskStats struct {
 	TrendData    []TrendPoint `json:"trend_data"`
 }
 
+// FlagCount represents the frequency of specific risk flags.
+// It tracks how often particular risk indicators are triggered.
 type FlagCount struct {
 	Flag  string `json:"flag"`
 	Count int64  `json:"count"`
 }
 
+// TrendPoint represents risk assessment data for a specific date.
+// It contains daily counts and totals for trend analysis.
 type TrendPoint struct {
 	Date       time.Time `json:"date"`
 	RiskCount  int64     `json:"risk_count"`
 	TotalCount int64     `json:"total_count"`
 }
 
+// GetRiskStats computes comprehensive risk statistics for the specified number of days.
+// It includes total checks, risk rates, average scores, top flags, and trend data.
 func (ra *RiskAnalytics) GetRiskStats(ctx context.Context, days int) (*RiskStats, error) {
 	stats := &RiskStats{}
 	since := time.Now().AddDate(0, 0, -days)
@@ -134,7 +147,8 @@ func (ra *RiskAnalytics) GetRiskStats(ctx context.Context, days int) (*RiskStats
 	return stats, nil
 }
 
-// Store risk check results for analytics
+// StoreRiskResult persists a risk check result with associated flags and rule matches.
+// It uses database transactions to ensure data consistency across related tables.
 func (ra *RiskAnalytics) StoreRiskResult(ctx context.Context, result *models.RiskCheckResult) error {
 	tx := ra.db.WithContext(ctx).Begin()
 	if tx.Error != nil {
@@ -173,7 +187,8 @@ func (ra *RiskAnalytics) StoreRiskResult(ctx context.Context, result *models.Ris
 	return tx.Commit().Error
 }
 
-// GetRiskHistory retrieves risk check history for a user
+// GetRiskHistory retrieves historical risk assessments for a specific user.
+// It includes associated flags and rule matches, ordered by most recent first.
 func (ra *RiskAnalytics) GetRiskHistory(ctx context.Context, userID string, limit int) ([]models.RiskCheckResult, error) {
 	var results []models.RiskCheckResult
 
@@ -192,11 +207,14 @@ func (ra *RiskAnalytics) GetRiskHistory(ctx context.Context, userID string, limi
 	return results, nil
 }
 
-// GetRiskSummaryByDateRange gets aggregated risk data for a date range
+// GetRiskSummaryByDateRange gets aggregated risk data for a specific date range.
+// It provides summary statistics for custom time periods defined by start and end dates.
 func (ra *RiskAnalytics) GetRiskSummaryByDateRange(ctx context.Context, startDate, endDate time.Time) (*RiskStats, error) {
 	return ra.getRiskStatsInRange(ctx, startDate, endDate)
 }
 
+// getRiskStatsInRange computes risk statistics for a custom date range.
+// It's an internal helper method for date-bounded analytics queries.
 func (ra *RiskAnalytics) getRiskStatsInRange(ctx context.Context, startDate, endDate time.Time) (*RiskStats, error) {
 	stats := &RiskStats{}
 

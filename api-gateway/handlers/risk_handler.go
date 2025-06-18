@@ -13,11 +13,13 @@ import (
 	"user-risk-system/pkg/validator"
 )
 
+// RiskHandler manages risk assessment and rule administration endpoints
 type RiskHandler struct {
 	riskClient      pb_risk.RiskServiceClient
 	riskAdminClient pb_risk.RiskAdminServiceClient
 }
 
+// NewRiskHandler creates a new risk handler with risk service clients
 func NewRiskHandler(riskClient pb_risk.RiskServiceClient, riskAdminClient pb_risk.RiskAdminServiceClient) *RiskHandler {
 	return &RiskHandler{
 		riskClient:      riskClient,
@@ -25,6 +27,7 @@ func NewRiskHandler(riskClient pb_risk.RiskServiceClient, riskAdminClient pb_ris
 	}
 }
 
+// CreateRiskRuleRequest represents the payload for creating a new risk rule
 type CreateRiskRuleRequest struct {
 	Name          string  `json:"name" validate:"required"`
 	Type          string  `json:"type" validate:"required"`
@@ -36,12 +39,14 @@ type CreateRiskRuleRequest struct {
 	ExpiresInDays int32   `json:"expires_in_days"`
 }
 
+// CreateRiskRuleResponse represents the response for risk rule creation
 type CreateRiskRuleResponse struct {
 	RuleID  string `json:"rule_id,omitempty"`
 	Success bool   `json:"success"`
 	Error   string `json:"error,omitempty"`
 }
 
+// CheckRiskRequest represents the payload for risk assessment
 type CheckRiskRequest struct {
 	UserID    string `json:"user_id" validate:"required"`
 	Email     string `json:"email" validate:"required,email"`
@@ -50,6 +55,7 @@ type CheckRiskRequest struct {
 	Phone     string `json:"phone"`
 }
 
+// CheckRiskResponse represents the response for risk assessment
 type CheckRiskResponse struct {
 	UserID    string   `json:"user_id"`
 	IsRisky   bool     `json:"is_risky"`
@@ -59,6 +65,7 @@ type CheckRiskResponse struct {
 	Error     string   `json:"error,omitempty"`
 }
 
+// UpdateRiskRuleRequest represents the payload for updating an existing risk rule
 type UpdateRiskRuleRequest struct {
 	Name          string  `json:"name" validate:"required"`
 	Type          string  `json:"type" validate:"required"`
@@ -70,11 +77,13 @@ type UpdateRiskRuleRequest struct {
 	ExpiresInDays int32   `json:"expires_in_days"`
 }
 
+// UpdateRiskRuleResponse represents the response for risk rule updates
 type UpdateRiskRuleResponse struct {
 	Success bool   `json:"success"`
 	Error   string `json:"error,omitempty"`
 }
 
+// CreateRiskRule creates a new risk rule (admin only)
 func (h *RiskHandler) CreateRiskRule(w http.ResponseWriter, r *http.Request) {
 	var req CreateRiskRuleRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -140,6 +149,7 @@ func (h *RiskHandler) CreateRiskRule(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// UpdateRiskRule modifies an existing risk rule (admin only)
 func (h *RiskHandler) UpdateRiskRule(w http.ResponseWriter, r *http.Request) {
 	ruleID := chi.URLParam(r, "id")
 	if ruleID == "" {
@@ -211,6 +221,7 @@ func (h *RiskHandler) UpdateRiskRule(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// CheckRisk evaluates user data against risk rules
 func (h *RiskHandler) CheckRisk(w http.ResponseWriter, r *http.Request) {
 	var req CheckRiskRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -273,6 +284,7 @@ func (h *RiskHandler) CheckRisk(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// DeleteRiskRule removes a risk rule by ID (admin only)
 func (h *RiskHandler) DeleteRiskRule(w http.ResponseWriter, r *http.Request) {
 	ruleID := chi.URLParam(r, "id")
 	if ruleID == "" {
@@ -311,6 +323,7 @@ func (h *RiskHandler) DeleteRiskRule(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// ListRiskRules retrieves all active risk rules (admin only)
 func (h *RiskHandler) ListRiskRules(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

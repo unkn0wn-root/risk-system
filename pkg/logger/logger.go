@@ -1,3 +1,4 @@
+// Package logger provides structured logging capabilities with context-aware field extraction.
 package logger
 
 import (
@@ -8,17 +9,22 @@ import (
 	"time"
 )
 
+// Logger wraps the standard slog.Logger with additional context-aware logging methods.
+// It provides convenient methods for extracting user and request information from contexts.
 type Logger struct {
 	*slog.Logger
 }
 
+// LogConfig defines the configuration options for creating a new logger instance.
 type LogConfig struct {
-	Level       string // debug, info, warn, error
-	Format      string // json, text
-	ServiceName string
-	Environment string
+	Level       string // Logging level (debug, info, warn, error)
+	Format      string // Output format (json, text)
+	ServiceName string // Service name to include in log entries
+	Environment string // Environment name to include in log entries
 }
 
+// New creates a new Logger instance with the specified configuration.
+// It sets up structured logging with JSON or text output format and includes service metadata.
 func New(config LogConfig) *Logger {
 	var level slog.Level
 	switch config.Level {
@@ -60,49 +66,59 @@ func New(config LogConfig) *Logger {
 	return &Logger{Logger: logger}
 }
 
-// Info logs an info message
+// Info logs an informational message with optional key-value pairs.
 func (l *Logger) Info(msg string, args ...any) {
 	l.Logger.Info(msg, args...)
 }
 
+// InfoCtx logs an informational message with context-extracted fields and optional key-value pairs.
+// It automatically includes user and request information from the context.
 func (l *Logger) InfoCtx(ctx context.Context, msg string, args ...any) {
 	allArgs := append(l.extractContextFields(ctx), args...)
 	l.Logger.InfoContext(ctx, msg, allArgs...)
 }
 
+// Warn logs a warning message with optional key-value pairs.
 func (l *Logger) Warn(msg string, args ...any) {
 	l.Logger.Warn(msg, args...)
 }
 
+// WarnCtx logs a warning message with context-extracted fields and optional key-value pairs.
+// It automatically includes user and request information from the context.
 func (l *Logger) WarnCtx(ctx context.Context, msg string, args ...any) {
 	allArgs := append(l.extractContextFields(ctx), args...)
 	l.Logger.WarnContext(ctx, msg, allArgs...)
 }
 
-// Error logs an error message
+// Error logs an error message with the error object and optional key-value pairs.
 func (l *Logger) Error(msg string, err error, args ...any) {
 	allArgs := append([]any{"error", err}, args...)
 	l.Logger.Error(msg, allArgs...)
 }
 
+// ErrorCtx logs an error message with context-extracted fields, error object, and optional key-value pairs.
+// It automatically includes user and request information from the context.
 func (l *Logger) ErrorCtx(ctx context.Context, msg string, err error, args ...any) {
 	allArgs := append([]any{"error", err}, args...)
 	l.Logger.ErrorContext(ctx, msg, append(l.extractContextFields(ctx), allArgs...)...)
 }
 
-// Fatalf logs a fatal error message with formatting and exits the program
+// Fatalf logs a fatal error message with formatting and exits the program with status code 1.
 func (l *Logger) Fatalf(format string, args ...any) {
 	l.Logger.Error(fmt.Sprintf(format, args...))
 	os.Exit(1)
 }
 
-// FatalfCtx logs a fatal error message with formatting, context fields, and exits the program
+// FatalfCtx logs a fatal error message with formatting and context fields, then exits the program.
+// It automatically includes user and request information from the context before exiting.
 func (l *Logger) FatalfCtx(ctx context.Context, format string, args ...any) {
 	contextFields := l.extractContextFields(ctx)
 	l.Logger.ErrorContext(ctx, fmt.Sprintf(format, args...), contextFields...)
 	os.Exit(1)
 }
 
+// extractContextFields extracts relevant logging fields from the request context.
+// It looks for user information, request IDs, and session data commonly added by middleware.
 func (l *Logger) extractContextFields(ctx context.Context) []any {
 	var fields []any
 
