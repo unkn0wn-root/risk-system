@@ -1,3 +1,5 @@
+// Package main implements the notification service entry point.
+// This service handles email, SMS, and push notifications for the user risk management system.
 package main
 
 import (
@@ -17,6 +19,7 @@ import (
 	pb_notification "user-risk-system/pkg/proto/notification"
 )
 
+// main initializes and starts the notification service with both gRPC and message queue consumers.
 func main() {
 	cfg, err := config.Load()
 	if err != nil {

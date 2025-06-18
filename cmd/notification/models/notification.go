@@ -1,7 +1,10 @@
+// Package models defines the notification data structures and constants used throughout the notification service.
 package models
 
 import "time"
 
+// Notification represents a notification message that can be sent through various channels.
+// It tracks the message content, delivery status, and metadata about sending attempts.
 type Notification struct {
 	ID        string     `json:"id"`
 	UserID    string     `json:"user_id"`
@@ -17,6 +20,7 @@ type Notification struct {
 	Error     string     `json:"error,omitempty"`
 }
 
+// Notification type constants define the different types of notifications supported by the system.
 const (
 	NotificationTypeUserCreated   = "USER_CREATED"
 	NotificationTypeRiskDetected  = "RISK_DETECTED"
