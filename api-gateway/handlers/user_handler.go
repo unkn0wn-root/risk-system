@@ -13,16 +13,19 @@ import (
 	"user-risk-system/pkg/validator"
 )
 
+// UserHandler manages user-related HTTP endpoints
 type UserHandler struct {
 	userClient pb_user.UserServiceClient
 }
 
+// NewUserHandler creates a new user handler with user service client
 func NewUserHandler(userClient pb_user.UserServiceClient) *UserHandler {
 	return &UserHandler{
 		userClient: userClient,
 	}
 }
 
+// CreateUserRequest represents the payload for creating a new user
 type CreateUserRequest struct {
 	Email     string `json:"email" validate:"required,email"`
 	FirstName string `json:"first_name" validate:"required"`
@@ -30,16 +33,19 @@ type CreateUserRequest struct {
 	Phone     string `json:"phone"`
 }
 
+// CreateUserResponse represents the response for user creation
 type CreateUserResponse struct {
 	User  *UserResponse `json:"user,omitempty"`
 	Error string        `json:"error,omitempty"`
 }
 
+// GetUserResponse represents the response for user retrieval
 type GetUserResponse struct {
 	User  *UserResponse `json:"user,omitempty"`
 	Error string        `json:"error,omitempty"`
 }
 
+// UserResponse represents the standard user data response structure
 type UserResponse struct {
 	ID         string    `json:"id"`
 	Email      string    `json:"email"`
@@ -52,6 +58,7 @@ type UserResponse struct {
 	CreatedAt  time.Time `json:"created_at"`
 }
 
+// CreateUser creates a new user account (admin only)
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var req CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -122,6 +129,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// GetUser retrieves a user by ID
 func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "id")
 	if userID == "" {
@@ -164,6 +172,7 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// UpdateUser modifies user profile information
 func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "id")
 	if userID == "" {
@@ -242,6 +251,7 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+// ListUsers retrieves all users (admin only)
 func (h *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	// todo: call a ListUsers gRPC method
 	// For now, return a placeholder response
@@ -252,6 +262,7 @@ func (h *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// HealthCheck returns the service health status
 func (h *UserHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	response := map[string]string{
 		"status":    "healthy",

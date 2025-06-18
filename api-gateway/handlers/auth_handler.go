@@ -12,11 +12,13 @@ import (
 	"user-risk-system/pkg/validator"
 )
 
+// AuthHandler handles authentication-related HTTP requests
 type AuthHandler struct {
 	userClient pb_user.UserServiceClient
 	jwtManager *auth.JWTManager
 }
 
+// NewAuthHandler creates a new authentication handler with user service client and JWT manager
 func NewAuthHandler(userClient pb_user.UserServiceClient, jwtManager *auth.JWTManager) *AuthHandler {
 	return &AuthHandler{
 		userClient: userClient,
@@ -24,11 +26,13 @@ func NewAuthHandler(userClient pb_user.UserServiceClient, jwtManager *auth.JWTMa
 	}
 }
 
+// LoginRequest represents the request payload for user login
 type LoginRequest struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=6"`
 }
 
+// RegisterRequest represents the request payload for user registration
 type RegisterRequest struct {
 	Email     string `json:"email" validate:"required,email"`
 	Password  string `json:"password" validate:"required,min=8"`
@@ -37,6 +41,7 @@ type RegisterRequest struct {
 	Phone     string `json:"phone"`
 }
 
+// AuthResponse represents the response payload for authentication endpoints
 type AuthResponse struct {
 	User         *UserResponse `json:"user"`
 	AccessToken  string        `json:"access_token"`
@@ -44,10 +49,12 @@ type AuthResponse struct {
 	ExpiresAt    time.Time     `json:"expires_at"`
 }
 
+// RefreshTokenRequest represents the request payload for token refresh
 type RefreshTokenRequest struct {
 	RefreshToken string `json:"refresh_token" validate:"required"`
 }
 
+// Login authenticates a user and returns JWT token
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -127,6 +134,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// Register creates a new user account and returns JWT token for the user
 func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -213,6 +221,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// RefreshToken generates a new access token from a valid refresh token
 func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	var req RefreshTokenRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -235,6 +244,7 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// GetProfile retrieves the authenticated user's profile information
 func (h *AuthHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	// User info is already in context from middleware
 	userID := r.Context().Value("user_id").(string)
