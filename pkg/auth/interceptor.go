@@ -1,3 +1,4 @@
+// Package auth provides authentication and authorization utilities for gRPC and HTTP services.
 package auth
 
 import (
@@ -8,7 +9,8 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// JWTClientInterceptor automatically adds JWT token to all gRPC requests
+// JWTClientInterceptor creates a gRPC client interceptor that automatically attaches JWT tokens to outgoing requests.
+// It extracts the JWT token from the context and adds it to the authorization metadata header.
 func JWTClientInterceptor() grpc.UnaryClientInterceptor {
 	return func(
 		ctx context.Context,
@@ -28,6 +30,8 @@ func JWTClientInterceptor() grpc.UnaryClientInterceptor {
 	}
 }
 
+// NewAuthenticatedGRPCConnection establishes a gRPC client connection with JWT authentication interceptor.
+// It creates a connection to the target server with automatic JWT token forwarding for all requests.
 func NewAuthenticatedGRPCConnection(target string) (*grpc.ClientConn, error) {
 	conn, err := grpc.Dial(
 		target,

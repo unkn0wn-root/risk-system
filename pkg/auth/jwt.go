@@ -1,3 +1,4 @@
+// Package auth provides JWT token management and user authentication capabilities.
 package auth
 
 import (
@@ -9,12 +10,16 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// JWTManager handles JWT token generation, validation, and refresh operations.
+// It encapsulates the secret key, token duration, and issuer information.
 type JWTManager struct {
 	secretKey     string
 	tokenDuration time.Duration
 	issuer        string
 }
 
+// Claims represents the custom JWT claims structure containing user information.
+// It extends the standard JWT registered claims with user-specific data.
 type Claims struct {
 	UserID   string   `json:"user_id"`
 	Email    string   `json:"email"`
@@ -23,16 +28,18 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// UserRole represents user roles
+// UserRole represents the different types of user roles in the system.
 type UserRole string
 
+// Predefined user roles for authorization purposes.
 const (
-	RoleUser      UserRole = "user"
-	RoleAdmin     UserRole = "admin"
-	RoleService   UserRole = "service"
-	RoleModerator UserRole = "moderator"
+	RoleUser      UserRole = "user"      // Standard user with basic permissions
+	RoleAdmin     UserRole = "admin"     // Administrator with full system access
+	RoleService   UserRole = "service"   // Service account for inter-service communication
+	RoleModerator UserRole = "moderator" // Moderator with elevated permissions
 )
 
+// NewJWTManager creates a new JWT manager instance with the specified configuration.
 func NewJWTManager(secretKey string, tokenDuration time.Duration, issuer string) *JWTManager {
 	return &JWTManager{
 		secretKey:     secretKey,
@@ -41,6 +48,8 @@ func NewJWTManager(secretKey string, tokenDuration time.Duration, issuer string)
 	}
 }
 
+// GenerateToken creates a new JWT token for the specified user with the given roles.
+// The token includes standard claims (issuer, audience, expiration) and custom user data.
 func (manager *JWTManager) GenerateToken(userID, email string, roles []string) (string, error) {
 	now := time.Now()
 
@@ -63,6 +72,8 @@ func (manager *JWTManager) GenerateToken(userID, email string, roles []string) (
 	return token.SignedString([]byte(manager.secretKey))
 }
 
+// ValidateToken parses and validates a JWT token string, returning the claims if valid.
+// It verifies the signature, expiration, and claim structure.
 func (manager *JWTManager) ValidateToken(tokenString string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(
 		tokenString,
@@ -87,6 +98,8 @@ func (manager *JWTManager) ValidateToken(tokenString string) (*Claims, error) {
 	return claims, nil
 }
 
+// RefreshToken generates a new token from an existing valid token if it's close to expiry.
+// It only refreshes tokens that are within 10 minutes of expiration.
 func (manager *JWTManager) RefreshToken(tokenString string) (string, error) {
 	claims, err := manager.ValidateToken(tokenString)
 	if err != nil {
@@ -101,6 +114,7 @@ func (manager *JWTManager) RefreshToken(tokenString string) (string, error) {
 	return manager.GenerateToken(claims.UserID, claims.Email, claims.Roles)
 }
 
+// HasRole checks if the user has the specified role in their claims.
 func (c *Claims) HasRole(role UserRole) bool {
 	for _, r := range c.Roles {
 		if r == string(role) {
@@ -110,7 +124,8 @@ func (c *Claims) HasRole(role UserRole) bool {
 	return false
 }
 
-// HasAnyRole checks if user has any of the specified roles
+// HasAnyRole checks if the user has any of the specified roles.
+// Returns true if at least one role matches.
 func (c *Claims) HasAnyRole(roles ...UserRole) bool {
 	for _, role := range roles {
 		if c.HasRole(role) {
@@ -120,6 +135,7 @@ func (c *Claims) HasAnyRole(roles ...UserRole) bool {
 	return false
 }
 
+// GenerateSecretKey creates a cryptographically secure random 256-bit secret key.
 func GenerateSecretKey() string {
 	bytes := make([]byte, 32) // 256 bits
 	if _, err := rand.Read(bytes); err != nil {

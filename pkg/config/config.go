@@ -1,58 +1,64 @@
+// Package config provides application configuration management with environment variable support.
 package config
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
+// Config holds all application configuration settings loaded from environment variables.
+// It includes service settings, database connections, external service URLs, and security parameters.
 type Config struct {
 	// Service configuration
-	ServiceName string
-	Port        string
-	Environment string // dev, staging, prod
-	LogLevel    string // debug, info, warn, error
+	ServiceName string // Name of the service
+	Port        string // HTTP server port
+	Environment string // Runtime environment (dev, staging, prod)
+	LogLevel    string // Logging level (debug, info, warn, error)
 
 	// Database
-	DatabaseURL      string
-	RiskDatabaseURL  string
-	DatabaseMaxConns int
-	DatabaseTimeout  time.Duration
+	DatabaseURL      string        // Primary database connection string
+	RiskDatabaseURL  string        // Risk assessment database connection string
+	DatabaseMaxConns int           // Maximum database connections in pool
+	DatabaseTimeout  time.Duration // Database operation timeout
 
 	// JWT
-	JWTSecret   string
-	JWTDuration time.Duration
-	JWTIssuer   string
+	JWTSecret   string        // Secret key for JWT token signing
+	JWTDuration time.Duration // JWT token validity duration
+	JWTIssuer   string        // JWT token issuer identifier
 
 	// External Services
-	UserServiceURL         string
-	RiskServiceURL         string
-	NotificationServiceURL string
-	RabbitMQURL            string
+	UserServiceURL         string // User service gRPC endpoint
+	RiskServiceURL         string // Risk assessment service gRPC endpoint
+	NotificationServiceURL string // Notification service gRPC endpoint
+	RabbitMQURL            string // RabbitMQ message broker connection string
 
 	// Email Configuration
-	EmailProvider     string
-	SendGridAPIKey    string
-	SendGridFromEmail string
-	SendGridFromName  string
+	EmailProvider     string // Email service provider (SENDGRID, SIMULATE)
+	SendGridAPIKey    string // SendGrid API key for email delivery
+	SendGridFromEmail string // Default sender email address
+	SendGridFromName  string // Default sender name
 
 	// SMS Configuration
-	SMSProvider      string
-	TwilioAccountSID string
-	TwilioAuthToken  string
-	TwilioFromNumber string
-	PushProvider     string
+	SMSProvider      string // SMS service provider (TWILIO, SIMULATE)
+	TwilioAccountSID string // Twilio account SID for SMS
+	TwilioAuthToken  string // Twilio authentication token
+	TwilioFromNumber string // Twilio sender phone number
+	PushProvider     string // Push notification provider
 
 	// Security
-	RateLimitRequests int
-	RateLimitWindow   time.Duration
+	RateLimitRequests int           // Maximum requests per rate limit window
+	RateLimitWindow   time.Duration // Rate limiting time window
 
 	// Monitoring
-	MetricsEnabled bool
-	TracingEnabled bool
+	MetricsEnabled bool // Enable application metrics collection
+	TracingEnabled bool // Enable distributed tracing
 
-	TemplatesDirectoryPath string
+	TemplatesDirectoryPath string // Path to notification templates directory
 }
 
+// Load creates and validates a new Config instance from environment variables.
+// It applies default values where appropriate and validates required fields.
 func Load() (*Config, error) {
 	config := &Config{
 		// Using the generic Env function (Approach 1)
@@ -104,6 +110,8 @@ func Load() (*Config, error) {
 	return config, nil
 }
 
+// validate checks that required configuration values are present.
+// It ensures security-critical settings like JWT secrets meet minimum requirements.
 func (c *Config) validate() error {
 	if c.Environment == "production" {
 		if c.JWTSecret == "" {
@@ -119,10 +127,12 @@ func (c *Config) validate() error {
 	return nil
 }
 
+// IsProduction returns true if the application is running in production.
 func (c *Config) IsProduction() bool {
-	return c.Environment == "production"
+	return strings.ToLower(c.Environment) == "production"
 }
 
+// IsDevelopment returns true if the application is running in development.
 func (c *Config) IsDevelopment() bool {
-	return c.Environment == "development"
+	return strings.ToLower(c.Environment) == "development"
 }

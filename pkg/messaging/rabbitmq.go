@@ -1,3 +1,4 @@
+// Package messaging provides RabbitMQ-based message publishing and consumption capabilities.
 package messaging
 
 import (
@@ -8,11 +9,15 @@ import (
 	"github.com/streadway/amqp"
 )
 
+// RabbitMQ wraps a RabbitMQ connection and channel for message operations.
+// It provides methods for queue management, message publishing, and consumption.
 type RabbitMQ struct {
-	conn    *amqp.Connection
-	channel *amqp.Channel
+	conn    *amqp.Connection // RabbitMQ connection
+	channel *amqp.Channel    // RabbitMQ channel for operations
 }
 
+// NewRabbitMQ creates a new RabbitMQ client instance and establishes connection.
+// It opens both a connection and a channel for message operations.
 func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	conn, err := amqp.Dial(url)
 	if err != nil {
@@ -30,6 +35,8 @@ func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	}, nil
 }
 
+// DeclareQueue creates a durable queue with the specified name if it doesn't exist.
+// The queue is configured to survive broker restarts but not exclusive to this connection.
 func (r *RabbitMQ) DeclareQueue(name string) error {
 	_, err := r.channel.QueueDeclare(
 		name,  // name
@@ -42,6 +49,8 @@ func (r *RabbitMQ) DeclareQueue(name string) error {
 	return err
 }
 
+// Publish sends a message to the specified queue after JSON marshaling.
+// The message is published with JSON content type and logged for debugging.
 func (r *RabbitMQ) Publish(queueName string, message interface{}) error {
 	body, err := json.Marshal(message)
 	if err != nil {
@@ -65,6 +74,8 @@ func (r *RabbitMQ) Publish(queueName string, message interface{}) error {
 	return nil
 }
 
+// Consume starts consuming messages from the specified queue with auto-acknowledgment.
+// It processes messages using the provided handler function and logs message receipts.
 func (r *RabbitMQ) Consume(queueName string, handler func([]byte) error) error {
 	msgs, err := r.channel.Consume(
 		queueName, // queue
@@ -96,6 +107,8 @@ func (r *RabbitMQ) Consume(queueName string, handler func([]byte) error) error {
 	return nil
 }
 
+// Close properly closes the RabbitMQ channel and connection.
+// It should be called when the RabbitMQ client is no longer needed to prevent resource leaks.
 func (r *RabbitMQ) Close() error {
 	if r.channel != nil {
 		r.channel.Close()
