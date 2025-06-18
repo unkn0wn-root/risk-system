@@ -1,3 +1,5 @@
+// Package repository implements data access layer for user entities.
+// It provides CRUD operations and database interactions for user management.
 package repository
 
 import (
@@ -7,19 +9,26 @@ import (
 	"gorm.io/gorm"
 )
 
+// UserRepository provides database operations for user entities.
+// It encapsulates all database interactions for the user service.
 type UserRepository struct {
 	db *gorm.DB
 }
 
+// NewUserRepository creates a new user repository with the provided database connection.
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
+// Create inserts a new user into the database with auto-generated UUID.
+// It assigns a unique identifier before persisting the user record.
 func (r *UserRepository) Create(user *models.User) error {
 	user.ID = uuid.New().String()
 	return r.db.Create(user).Error
 }
 
+// GetByID retrieves a user by their unique identifier.
+// It returns an error if the user is not found in the database.
 func (r *UserRepository) GetByID(id string) (*models.User, error) {
 	var user models.User
 	err := r.db.Where("id = ?", id).First(&user).Error
@@ -29,6 +38,8 @@ func (r *UserRepository) GetByID(id string) (*models.User, error) {
 	return &user, nil
 }
 
+// GetByEmail retrieves a user by their email address.
+// It's used for authentication and duplicate checking during registration.
 func (r *UserRepository) GetByEmail(email string) (*models.User, error) {
 	var user models.User
 	err := r.db.Where("email = ?", email).First(&user).Error
@@ -38,14 +49,20 @@ func (r *UserRepository) GetByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
+// Update modifies an existing user record in the database.
+// It saves all user fields including timestamps and profile changes.
 func (r *UserRepository) Update(user *models.User) error {
 	return r.db.Save(user).Error
 }
 
+// Delete permanently removes a user from the database by ID.
+// It performs a hard delete operation that cannot be reversed.
 func (r *UserRepository) Delete(id string) error {
 	return r.db.Delete(&models.User{}, "id = ?", id).Error
 }
 
+// List retrieves multiple users with pagination support.
+// It returns a limited number of users starting from the specified offset.
 func (r *UserRepository) List(limit, offset int) ([]*models.User, error) {
 	var users []*models.User
 	err := r.db.Limit(limit).Offset(offset).Find(&users).Error

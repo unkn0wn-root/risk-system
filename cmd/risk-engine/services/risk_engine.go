@@ -1,3 +1,5 @@
+// Package services implements the core business logic for risk evaluation.
+// It provides the risk engine for rule-based assessment and caching mechanisms.
 package services
 
 import (
@@ -15,6 +17,8 @@ import (
 	"github.com/google/uuid"
 )
 
+// RiskEngine orchestrates risk evaluation against configurable rules.
+// It provides caching, rule evaluation, and scoring mechanisms for user data assessment.
 type RiskEngine struct {
 	riskRepo   *repository.RiskRepository
 	logger     *logger.Logger
@@ -24,6 +28,8 @@ type RiskEngine struct {
 	cacheMutex sync.RWMutex
 }
 
+// NewRiskEngine creates a new risk engine with repository and logger dependencies.
+// It initializes the rule cache with a 5-minute TTL for optimal performance.
 func NewRiskEngine(riskRepo *repository.RiskRepository, logger *logger.Logger) *RiskEngine {
 	return &RiskEngine{
 		riskRepo:  riskRepo,
@@ -33,6 +39,8 @@ func NewRiskEngine(riskRepo *repository.RiskRepository, logger *logger.Logger) *
 	}
 }
 
+// CheckRisk evaluates user data against all active risk rules.
+// It returns a comprehensive risk assessment with flags, scores, and matched rules.
 func (re *RiskEngine) CheckRisk(ctx context.Context, req *pb_risk.RiskCheckRequest) (*models.RiskCheckResult, error) {
 	result := &models.RiskCheckResult{
 		CheckID:      generateCheckID(),
@@ -114,6 +122,8 @@ func (re *RiskEngine) CheckRisk(ctx context.Context, req *pb_risk.RiskCheckReque
 	return result, nil
 }
 
+// refreshRulesCache updates the in-memory rule cache when expired.
+// It loads rules by category to optimize evaluation performance.
 func (re *RiskEngine) refreshRulesCache(ctx context.Context) error {
 	re.cacheMutex.RLock()
 	cacheExpired := time.Since(re.cacheTime) >= re.cacheTTL
@@ -153,6 +163,8 @@ func (re *RiskEngine) refreshRulesCache(ctx context.Context) error {
 	return nil
 }
 
+// checkEmailRisk evaluates email addresses against email-specific risk rules.
+// It returns the total score, flags, and matched rules for the email.
 func (re *RiskEngine) checkEmailRisk(ctx context.Context, email string) (int, []string, []models.RiskRule) {
 	var totalScore int
 	var flags []string
@@ -195,6 +207,8 @@ func (re *RiskEngine) checkEmailRisk(ctx context.Context, email string) (int, []
 	return totalScore, flags, matchedRules
 }
 
+// evaluateEmailRule determines if an email matches a specific risk rule.
+// It supports blacklist, pattern matching, domain filtering, and containment checks.
 func (re *RiskEngine) evaluateEmailRule(rule models.RiskRule, emailLower string) (bool, error) {
 	switch rule.Type {
 	case "EMAIL_BLACKLIST":
@@ -215,6 +229,8 @@ func (re *RiskEngine) evaluateEmailRule(rule models.RiskRule, emailLower string)
 	}
 }
 
+// checkNameRisk evaluates user names against name-specific risk rules.
+// It checks first name, last name, and full name combinations.
 func (re *RiskEngine) checkNameRisk(ctx context.Context, firstName, lastName string) (int, []string, []models.RiskRule) {
 	var totalScore int
 	var flags []string
@@ -256,6 +272,8 @@ func (re *RiskEngine) checkNameRisk(ctx context.Context, firstName, lastName str
 	return totalScore, flags, matchedRules
 }
 
+// evaluateNameRule determines if a name matches a specific risk rule.
+// It supports blacklists, pattern matching, and containment checks for names.
 func (re *RiskEngine) evaluateNameRule(rule models.RiskRule, firstNameLower, lastNameLower, fullName string) (bool, error) {
 	switch rule.Type {
 	case "NAME_BLACKLIST":
@@ -277,6 +295,8 @@ func (re *RiskEngine) evaluateNameRule(rule models.RiskRule, firstNameLower, las
 	}
 }
 
+// checkPhoneRisk evaluates phone numbers against phone-specific risk rules.
+// It normalizes phone numbers and checks against various rule types.
 func (re *RiskEngine) checkPhoneRisk(ctx context.Context, phone string) (int, []string, []models.RiskRule) {
 	var totalScore int
 	var flags []string
@@ -317,6 +337,8 @@ func (re *RiskEngine) checkPhoneRisk(ctx context.Context, phone string) (int, []
 	return totalScore, flags, matchedRules
 }
 
+// evaluatePhoneRule determines if a phone number matches a specific risk rule.
+// It supports blacklists, pattern matching, and prefix-based checks.
 func (re *RiskEngine) evaluatePhoneRule(rule models.RiskRule, normalizedPhone string) (bool, error) {
 	switch rule.Type {
 	case "PHONE_BLACKLIST":
@@ -334,6 +356,8 @@ func (re *RiskEngine) evaluatePhoneRule(rule models.RiskRule, normalizedPhone st
 	}
 }
 
+// calculateRiskLevel determines risk level and risky status based on total score.
+// It uses predefined thresholds to classify risk from MINIMAL to CRITICAL.
 func (re *RiskEngine) calculateRiskLevel(totalScore int) (string, bool) {
 	switch {
 	case totalScore >= 100:
@@ -349,7 +373,8 @@ func (re *RiskEngine) calculateRiskLevel(totalScore int) (string, bool) {
 	}
 }
 
-// GetCachedRules returns a copy of the currently cached rules for a category
+// GetCachedRules returns a copy of the currently cached rules for a category.
+// It prevents external modification by returning a deep copy of cached rules.
 func (re *RiskEngine) GetCachedRules(category string) []models.RiskRule {
 	re.cacheMutex.RLock()
 	defer re.cacheMutex.RUnlock()
@@ -365,7 +390,8 @@ func (re *RiskEngine) GetCachedRules(category string) []models.RiskRule {
 	return result
 }
 
-// InvalidateCache forces a cache refresh on the next request
+// InvalidateCache forces a cache refresh on the next request.
+// It resets the cache timestamp to trigger immediate rule reloading.
 func (re *RiskEngine) InvalidateCache() {
 	re.cacheMutex.Lock()
 	defer re.cacheMutex.Unlock()
@@ -373,7 +399,8 @@ func (re *RiskEngine) InvalidateCache() {
 	re.cacheTime = time.Time{} // Reset to zero time to force refresh
 }
 
-// GetCacheStats returns information about the current cache state
+// GetCacheStats returns information about the current cache state.
+// It provides metrics about cache age, rule counts, and last update time.
 func (re *RiskEngine) GetCacheStats() map[string]interface{} {
 	re.cacheMutex.RLock()
 	defer re.cacheMutex.RUnlock()
@@ -388,7 +415,8 @@ func (re *RiskEngine) GetCacheStats() map[string]interface{} {
 	}
 }
 
-// Helper functions
+// extractDomain extracts the domain portion from an email address.
+// It returns the domain part after the @ symbol, or empty string if invalid.
 func extractDomain(email string) string {
 	parts := strings.Split(email, "@")
 	if len(parts) != 2 {
@@ -397,6 +425,8 @@ func extractDomain(email string) string {
 	return strings.ToLower(parts[1])
 }
 
+// normalizePhoneNumber removes common formatting characters from phone numbers.
+// It strips spaces, dashes, parentheses, plus signs, and dots for consistent comparison.
 func normalizePhoneNumber(phone string) string {
 	// Remove common phone number formatting
 	phone = strings.ReplaceAll(phone, " ", "")
@@ -408,12 +438,16 @@ func normalizePhoneNumber(phone string) string {
 	return strings.TrimSpace(phone)
 }
 
+// isValidEmail performs basic email format validation using regex.
+// It checks for standard email structure but doesn't verify deliverability.
 func isValidEmail(email string) bool {
 	// Basic email validation regex
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	return emailRegex.MatchString(email)
 }
 
+// maskEmail obscures email addresses for secure logging.
+// It shows only the first 2 characters of the username to protect privacy.
 func maskEmail(email string) string {
 	if email == "" {
 		return ""
@@ -434,6 +468,8 @@ func maskEmail(email string) string {
 	return username[:2] + "***@" + domain
 }
 
+// generateCheckID creates a unique identifier for risk check operations.
+// It combines timestamp and UUID elements for guaranteed uniqueness.
 func generateCheckID() string {
 	return fmt.Sprintf("check_%d_%s", time.Now().Unix(), strings.ReplaceAll(uuid.New().String()[:8], "-", ""))
 }
