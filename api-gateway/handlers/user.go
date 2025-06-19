@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"user-risk-system/pkg/errors"
-	pb_user "user-risk-system/pkg/proto/user"
 	"user-risk-system/pkg/validator"
+	pb_user "user-risk-system/proto/user"
 )
 
 // UserHandler manages user-related HTTP endpoints
@@ -86,7 +86,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call user service via gRPC
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	grpcReq := &pb_user.CreateUserRequest{

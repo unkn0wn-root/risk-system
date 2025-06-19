@@ -15,7 +15,7 @@ import (
 	"user-risk-system/pkg/health"
 	"user-risk-system/pkg/logger"
 	"user-risk-system/pkg/messaging"
-	pb_notification "user-risk-system/pkg/proto/notification"
+	pb_notification "user-risk-system/proto/notification"
 )
 
 // main initializes and starts the notification service with both gRPC and message queue consumers.

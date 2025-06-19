@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"user-risk-system/pkg/errors"
-	pb_risk "user-risk-system/pkg/proto/risk"
 	"user-risk-system/pkg/validator"
+	pb_risk "user-risk-system/proto/risk"
 )
 
 // RiskHandler manages risk assessment and rule administration endpoints
@@ -113,7 +113,7 @@ func (h *RiskHandler) CreateRiskRule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	grpcReq := &pb_risk.CreateRiskRuleRequest{
@@ -185,7 +185,7 @@ func (h *RiskHandler) UpdateRiskRule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	grpcReq := &pb_risk.UpdateRiskRuleRequest{
@@ -250,7 +250,7 @@ func (h *RiskHandler) CheckRisk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	grpcReq := &pb_risk.RiskCheckRequest{
@@ -292,7 +292,7 @@ func (h *RiskHandler) DeleteRiskRule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	grpcReq := &pb_risk.DeleteRiskRuleRequest{
@@ -325,7 +325,7 @@ func (h *RiskHandler) DeleteRiskRule(w http.ResponseWriter, r *http.Request) {
 
 // ListRiskRules retrieves all active risk rules (admin only)
 func (h *RiskHandler) ListRiskRules(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	grpcReq := &pb_risk.ListRiskRulesRequest{

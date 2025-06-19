@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v5.29.3
-// source: pkg/proto/risk/risk.proto
+// source: proto/risk/risk.proto
 
 package risk
 
@@ -105,7 +105,7 @@ var RiskService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pkg/proto/risk/risk.proto",
+	Metadata: "proto/risk/risk.proto",
 }
 
 const (
@@ -343,5 +343,5 @@ var RiskAdminService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pkg/proto/risk/risk.proto",
+	Metadata: "proto/risk/risk.proto",
 }

@@ -14,10 +14,10 @@ import (
 	"user-risk-system/pkg/logger"
 	"user-risk-system/pkg/messaging"
 	"user-risk-system/pkg/models"
-	pb_notification "user-risk-system/pkg/proto/notification"
-	pb_risk "user-risk-system/pkg/proto/risk"
-	pb_user "user-risk-system/pkg/proto/user"
 	"user-risk-system/pkg/scontext"
+	pb_notification "user-risk-system/proto/notification"
+	pb_risk "user-risk-system/proto/risk"
+	pb_user "user-risk-system/proto/user"
 )
 
 // UserHandler processes user-related gRPC requests and coordinates with external services.

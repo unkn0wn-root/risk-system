@@ -4,7 +4,7 @@ import (
 	"context"
 	"user-risk-system/cmd/risk-engine/services"
 	"user-risk-system/pkg/logger"
-	pb_risk "user-risk-system/pkg/proto/risk"
+	pb_risk "user-risk-system/proto/risk"
 )
 
 // RiskHandler processes risk evaluation requests via gRPC.
@@ -43,7 +43,7 @@ func (h *RiskHandler) CheckRisk(ctx context.Context, req *pb_risk.RiskCheckReque
 	}
 
 	go func() {
-		if err := h.analytics.StoreRiskResult(context.Background(), result); err != nil {
+		if err := h.analytics.StoreRiskResult(ctx, result); err != nil {
 			h.logger.Error("Failed to store risk result for analytics", err)
 		}
 	}()
