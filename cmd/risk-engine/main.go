@@ -1,5 +1,3 @@
-// Package main implements the risk engine service entry point.
-// This service evaluates user data against configurable risk rules and provides analytics.
 package main
 
 import (
@@ -19,14 +17,12 @@ import (
 )
 
 // riskConfig holds the configuration specific to the risk engine service.
-// It includes database connection details and server port information.
 type riskConfig struct {
 	DatabaseURL string
 	Port        string
 }
 
 // main initializes and starts the risk engine service with gRPC endpoints.
-// It sets up database connections, repositories, services, and handlers for risk evaluation.
 func main() {
 	cfg, err := config.Load()
 	if err != nil {
@@ -38,6 +34,7 @@ func main() {
 		Port:        ":" + cfg.Port,
 	}
 
+	// log
 	logConfig := logger.LogConfig{
 		Level:       "info",
 		Format:      "json",
@@ -47,7 +44,7 @@ func main() {
 
 	rl := logger.New(logConfig)
 
-	// setup database
+	// databse
 	db, err := utils.SetupDatabase(rcfg.DatabaseURL, &gorm.Config{}, cfg, rl)
 	if err != nil {
 		rl.Fatalf("Failed to setup database: %v", err)

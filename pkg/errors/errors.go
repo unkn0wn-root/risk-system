@@ -10,10 +10,10 @@ import (
 )
 
 // AppError represents a structured application error with code, message, and optional details.
-// It implements the error interface and provides HTTP/gRPC status code mapping.
+// implements the error interface and provides HTTP/gRPC status code mapping.
 type AppError struct {
-	Code    string `json:"code"`    // Unique error code for programmatic handling
-	Message string `json:"message"` // Human-readable error message
+	Code    string `json:"code"`              // Unique error code for programmatic handling
+	Message string `json:"message"`           // Human-readable error message
 	Details string `json:"details,omitempty"` // Optional additional error details
 }
 
@@ -26,13 +26,11 @@ func NewAppError(code, message, details string) *AppError {
 	}
 }
 
-// Error implements the error interface, returning the error message.
 func (e *AppError) Error() string {
 	return e.Message
 }
 
 // Predefined application errors for common scenarios.
-// These provide consistent error codes and messages across the application.
 var (
 	ErrUserNotFound               = &AppError{Code: "USER_NOT_FOUND", Message: "User not found"}
 	ErrInvalidPassword            = &AppError{Code: "INVALID_PASSWORD", Message: "Invalid password"}
@@ -52,7 +50,6 @@ var (
 )
 
 // HTTPStatus returns the appropriate HTTP status code for the error.
-// It maps application error codes to standard HTTP status codes.
 func (e *AppError) HTTPStatus() int {
 	switch e.Code {
 	case "USER_NOT_FOUND":
@@ -97,7 +94,7 @@ func (e *AppError) WithDetails(details string) *AppError {
 }
 
 // GRPCStatus returns the appropriate gRPC status for the error.
-// It maps application error codes to standard gRPC status codes.
+// maps application error codes to standard gRPC status codes.
 func (e *AppError) GRPCStatus() *status.Status {
 	switch e.Code {
 	case "USER_NOT_FOUND":
@@ -112,7 +109,6 @@ func (e *AppError) GRPCStatus() *status.Status {
 }
 
 // SendJSON writes the error as a JSON HTTP response with the appropriate status code.
-// It sets the content type and includes both error message and details if present.
 func (e *AppError) SendJSON(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(e.HTTPStatus())

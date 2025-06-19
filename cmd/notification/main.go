@@ -1,5 +1,3 @@
-// Package main implements the notification service entry point.
-// This service handles email, SMS, and push notifications for the user risk management system.
 package main
 
 import (

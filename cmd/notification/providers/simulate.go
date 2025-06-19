@@ -8,7 +8,7 @@ import (
 )
 
 // SimulateEmailProvider simulates email sending for testing and development.
-// It logs email details without actually sending them, with configurable failure rates.
+// logs email details without actually sending them, with configurable failure rates.
 type SimulateEmailProvider struct{}
 
 // NewSimulateEmailProvider creates a new email simulation provider.
@@ -17,7 +17,7 @@ func NewSimulateEmailProvider() *SimulateEmailProvider {
 }
 
 // SendEmail simulates sending an email with random delays and occasional failures.
-// It logs all email details and includes a 5% simulated failure rate for testing.
+// logs all email details and includes a 5% simulated failure rate for testing.
 func (p *SimulateEmailProvider) SendEmail(to, subject, body string, templateData map[string]interface{}) error {
 	log.Printf("📧 [SIMULATE] Sending Email")
 	log.Printf("   To: %s", to)
@@ -44,7 +44,6 @@ func (p *SimulateEmailProvider) GetProviderName() string {
 }
 
 // SimulateSMSProvider simulates SMS sending for testing and development.
-// It logs SMS details without actually sending them, with configurable failure rates.
 type SimulateSMSProvider struct{}
 
 // NewSimulateSMSProvider creates a new SMS simulation provider.
@@ -53,7 +52,7 @@ func NewSimulateSMSProvider() *SimulateSMSProvider {
 }
 
 // SendSMS simulates sending an SMS with random delays and occasional failures.
-// It logs all SMS details and includes a 3% simulated failure rate for testing.
+// logs all SMS details and includes a 3% simulated failure rate for testing.
 func (p *SimulateSMSProvider) SendSMS(to, message string) error {
 	log.Printf("📱 [SIMULATE] Sending SMS")
 	log.Printf("   To: %s", to)
@@ -76,7 +75,7 @@ func (p *SimulateSMSProvider) GetProviderName() string {
 }
 
 // SimulatePushProvider simulates push notifications for testing and development.
-// It logs push notification details without actually sending them.
+// logs push notification details without actually sending them.
 type SimulatePushProvider struct{}
 
 // NewSimulatePushProvider creates a new push notification simulation provider.
@@ -85,7 +84,7 @@ func NewSimulatePushProvider() *SimulatePushProvider {
 }
 
 // SendPush simulates sending a push notification with random delays and occasional failures.
-// It logs all push notification details and includes a 2% simulated failure rate.
+// logs all push notification details and includes a 2% simulated failure rate.
 func (p *SimulatePushProvider) SendPush(userID, title, message string, data map[string]interface{}) error {
 	log.Printf("🔔 [SIMULATE] Sending Push Notification")
 	log.Printf("   User ID: %s", userID)

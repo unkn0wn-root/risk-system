@@ -1,5 +1,3 @@
-// Package handlers implements the risk engine gRPC request handlers.
-// It provides the main risk checking functionality and integrates with analytics.
 package handlers
 
 import (
@@ -10,7 +8,7 @@ import (
 )
 
 // RiskHandler processes risk evaluation requests via gRPC.
-// It coordinates between the risk engine for evaluation and analytics for reporting.
+// coordinates between the risk engine for evaluation and analytics for reporting.
 type RiskHandler struct {
 	pb_risk.UnimplementedRiskServiceServer
 	riskEngine *services.RiskEngine    // Does the actual risk checking
@@ -19,7 +17,6 @@ type RiskHandler struct {
 }
 
 // NewRiskHandler creates a new risk handler with the required dependencies.
-// It initializes the handler with risk engine, analytics service, and logger.
 func NewRiskHandler(
 	riskEngine *services.RiskEngine,
 	analytics *services.RiskAnalytics,
@@ -33,7 +30,6 @@ func NewRiskHandler(
 }
 
 // CheckRisk evaluates user data against configured risk rules via gRPC.
-// It performs risk assessment and asynchronously stores results for analytics.
 func (h *RiskHandler) CheckRisk(ctx context.Context, req *pb_risk.RiskCheckRequest) (*pb_risk.RiskCheckResponse, error) {
 	ctx = context.WithValue(ctx, "user_id", req.UserId)
 	ctx = context.WithValue(ctx, "user_email", req.Email)

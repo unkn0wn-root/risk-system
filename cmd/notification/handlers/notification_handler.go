@@ -1,5 +1,3 @@
-// Package handlers implements the notification service business logic.
-// It handles both synchronous gRPC requests and asynchronous message queue processing.
 package handlers
 
 import (
@@ -22,7 +20,7 @@ import (
 )
 
 // NotificationHandler orchestrates notification delivery across multiple channels and providers.
-// It implements both gRPC services and message queue consumers for flexible notification processing.
+// implements both gRPC services and message queue consumers for flexible notification processing.
 type NotificationHandler struct {
 	pb_notification.UnimplementedNotificationServiceServer
 	messageQueue    *messaging.RabbitMQ
@@ -35,7 +33,7 @@ type NotificationHandler struct {
 }
 
 // NewNotificationHandler creates a new notification handler with the provided dependencies.
-// It initializes all notification providers based on configuration settings.
+// initializes all notification providers based on configuration settings.
 func NewNotificationHandler(
 	messageQueue *messaging.RabbitMQ,
 	cfg *config.Config,
@@ -54,7 +52,7 @@ func NewNotificationHandler(
 }
 
 // initializeProviders configures email, SMS, and push notification providers based on config.
-// It falls back to simulation providers when real providers are not properly configured.
+// falls back to simulation providers when real providers are not properly configured.
 func (h *NotificationHandler) initializeProviders() {
 	// Email Provider
 	switch h.config.EmailProvider {
@@ -106,7 +104,7 @@ func (h *NotificationHandler) initializeProviders() {
 }
 
 // SendNotification handles synchronous gRPC notification requests from other services.
-// It determines appropriate channels based on notification type and sends via all relevant providers.
+// determines appropriate channels based on notification type and sends via all relevant providers.
 func (h *NotificationHandler) SendNotification(ctx context.Context, req *pb_notification.SendNotificationRequest) (*pb_notification.SendNotificationResponse, error) {
 	h.logger.InfoCtx(ctx, "Sending notification",
 		"type", req.Type,
@@ -183,7 +181,7 @@ func (h *NotificationHandler) determineChannels(notificationType string) []strin
 }
 
 // sendNotificationByChannel routes notifications to the appropriate provider based on channel type.
-// It acts as a dispatcher between channel types and their respective implementations.
+// acts as a dispatcher between channel types and their respective implementations.
 func (h *NotificationHandler) sendNotificationByChannel(ctx context.Context, notification *notification_models.Notification) error {
 	switch notification.Channel {
 	case notification_models.ChannelEmail:
@@ -198,7 +196,7 @@ func (h *NotificationHandler) sendNotificationByChannel(ctx context.Context, not
 }
 
 // sendEmailNotification handles email delivery using configured email providers.
-// It selects appropriate templates and renders them with notification data.
+// selects appropriate templates and renders them with notification data.
 func (h *NotificationHandler) sendEmailNotification(ctx context.Context, notification *notification_models.Notification) error {
 	templateData := templates.EmailTemplateData{
 		UserID:    notification.UserID,
@@ -248,7 +246,7 @@ func (h *NotificationHandler) sendEmailNotification(ctx context.Context, notific
 }
 
 // sendSMSNotification handles SMS delivery using configured SMS providers.
-// It formats messages appropriately for SMS length constraints.
+// formats messages appropriately for SMS length constraints.
 func (h *NotificationHandler) sendSMSNotification(ctx context.Context, notification *notification_models.Notification) error {
 	message := h.getSMSMessage(notification.Type, notification.Message)
 
@@ -257,7 +255,7 @@ func (h *NotificationHandler) sendSMSNotification(ctx context.Context, notificat
 }
 
 // sendPushNotification handles push notification delivery using configured push providers.
-// It formats titles and messages with additional metadata for mobile apps.
+// formats titles and messages with additional metadata for mobile apps.
 func (h *NotificationHandler) sendPushNotification(ctx context.Context, notification *notification_models.Notification) error {
 	title := h.getPushTitle(notification.Type)
 	message := notification.Message
@@ -272,7 +270,7 @@ func (h *NotificationHandler) sendPushNotification(ctx context.Context, notifica
 }
 
 // getEmailSubject generates email subject lines based on notification type.
-// It includes emojis and urgency indicators for better user experience.
+// includes emojis and urgency indicators for better user experience.
 func (h *NotificationHandler) getEmailSubject(notificationType string) string {
 	switch notificationType {
 	case notification_models.NotificationTypeUserCreated:
@@ -289,7 +287,7 @@ func (h *NotificationHandler) getEmailSubject(notificationType string) string {
 }
 
 // getSMSMessage formats messages for SMS delivery with length constraints.
-// It truncates long messages and adds context-appropriate prefixes.
+// truncates long messages and adds context-appropriate prefixes.
 func (h *NotificationHandler) getSMSMessage(notificationType, message string) string {
 	switch notificationType {
 	case notification_models.NotificationTypeRiskDetected:
@@ -319,7 +317,6 @@ func (h *NotificationHandler) getPushTitle(notificationType string) string {
 }
 
 // StartMessageConsumer initializes all message queue consumers for asynchronous processing.
-// It starts separate goroutines for user events, risk events, and direct notifications.
 func (h *NotificationHandler) StartMessageConsumer() {
 	go func() {
 		h.logger.Info("Starting user.created queue consumer...")
@@ -349,7 +346,6 @@ func (h *NotificationHandler) StartMessageConsumer() {
 }
 
 // handleUserCreatedEvent processes user registration events from the message queue.
-// It sends welcome emails to newly registered users with personalized content.
 func (h *NotificationHandler) handleUserCreatedEvent(data []byte) error {
 	var event models.UserCreatedEvent
 	if err := json.Unmarshal(data, &event); err != nil {
@@ -394,7 +390,7 @@ func (h *NotificationHandler) handleUserCreatedEvent(data []byte) error {
 }
 
 // handleRiskDetectedEvent processes risk detection events from the message queue.
-// It sends urgent security alerts via multiple channels based on risk level.
+// sends urgent security alerts via multiple channels based on risk level.
 func (h *NotificationHandler) handleRiskDetectedEvent(data []byte) error {
 	var event models.RiskDetectedEvent
 	if err := json.Unmarshal(data, &event); err != nil {
@@ -449,7 +445,7 @@ func (h *NotificationHandler) handleRiskDetectedEvent(data []byte) error {
 }
 
 // handleNotificationEvent processes direct notification requests from the message queue.
-// It handles generic notifications that don't fit into specific event categories.
+// handles generic notifications that don't fit into specific event categories.
 func (h *NotificationHandler) handleNotificationEvent(data []byte) error {
 	var notification notification_models.Notification
 	if err := json.Unmarshal(data, &notification); err != nil {
@@ -486,7 +482,6 @@ func (h *NotificationHandler) handleNotificationEvent(data []byte) error {
 }
 
 // extractFirstName parses user names from welcome messages for personalization.
-// It provides a fallback when name extraction fails.
 func extractFirstName(message string) string {
 	if strings.Contains(message, "Welcome") {
 		parts := strings.Split(message, " ")

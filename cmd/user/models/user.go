@@ -1,5 +1,3 @@
-// Package models defines the user data structures and business logic.
-// It provides user entity definition, password management, and role-based access control.
 package models
 
 import (
@@ -9,7 +7,7 @@ import (
 )
 
 // User represents a system user with authentication and profile information.
-// It includes security features like password hashing, roles, and verification status.
+// includes security features like password hashing, roles, and verification status.
 type User struct {
 	ID           string     `json:"id" gorm:"primaryKey"`
 	Email        string     `json:"email" gorm:"uniqueIndex;not null"`
@@ -26,7 +24,6 @@ type User struct {
 }
 
 // SetPassword securely hashes and stores a user's password using bcrypt.
-// It replaces the existing password hash with a new one generated from the plaintext password.
 func (u *User) SetPassword(password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -37,14 +34,12 @@ func (u *User) SetPassword(password string) error {
 }
 
 // CheckPassword verifies a plaintext password against the stored hash.
-// It returns true if the password matches, false otherwise.
 func (u *User) CheckPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 	return err == nil
 }
 
 // HasRole checks if the user has a specific role assigned.
-// It returns true if the role exists in the user's roles slice.
 func (u *User) HasRole(role string) bool {
 	for _, r := range u.Roles {
 		if r == role {
@@ -55,7 +50,7 @@ func (u *User) HasRole(role string) bool {
 }
 
 // AddRole assigns a new role to the user if not already present.
-// It prevents duplicate roles by checking existence before adding.
+// prevents duplicate roles by checking existence before adding.
 func (u *User) AddRole(role string) {
 	if !u.HasRole(role) {
 		u.Roles = append(u.Roles, role)
@@ -63,7 +58,7 @@ func (u *User) AddRole(role string) {
 }
 
 // RemoveRole removes a specific role from the user's role list.
-// It performs an in-place removal and stops after finding the first match.
+// performs an in-place removal and stops after finding the first match.
 func (u *User) RemoveRole(role string) {
 	for i, r := range u.Roles {
 		if r == role {
@@ -74,7 +69,6 @@ func (u *User) RemoveRole(role string) {
 }
 
 // GetFullName returns the user's complete name by combining first and last names.
-// It provides a convenient way to display the user's full name.
 func (u *User) GetFullName() string {
 	return u.FirstName + " " + u.LastName
 }

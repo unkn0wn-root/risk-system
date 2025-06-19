@@ -10,7 +10,6 @@ import (
 )
 
 // Logger wraps the standard slog.Logger with additional context-aware logging methods.
-// It provides convenient methods for extracting user and request information from contexts.
 type Logger struct {
 	*slog.Logger
 }
@@ -24,7 +23,6 @@ type LogConfig struct {
 }
 
 // New creates a new Logger instance with the specified configuration.
-// It sets up structured logging with JSON or text output format and includes service metadata.
 func New(config LogConfig) *Logger {
 	var level slog.Level
 	switch config.Level {
@@ -72,7 +70,6 @@ func (l *Logger) Info(msg string, args ...any) {
 }
 
 // InfoCtx logs an informational message with context-extracted fields and optional key-value pairs.
-// It automatically includes user and request information from the context.
 func (l *Logger) InfoCtx(ctx context.Context, msg string, args ...any) {
 	allArgs := append(l.extractContextFields(ctx), args...)
 	l.Logger.InfoContext(ctx, msg, allArgs...)
@@ -84,7 +81,6 @@ func (l *Logger) Warn(msg string, args ...any) {
 }
 
 // WarnCtx logs a warning message with context-extracted fields and optional key-value pairs.
-// It automatically includes user and request information from the context.
 func (l *Logger) WarnCtx(ctx context.Context, msg string, args ...any) {
 	allArgs := append(l.extractContextFields(ctx), args...)
 	l.Logger.WarnContext(ctx, msg, allArgs...)
@@ -97,7 +93,6 @@ func (l *Logger) Error(msg string, err error, args ...any) {
 }
 
 // ErrorCtx logs an error message with context-extracted fields, error object, and optional key-value pairs.
-// It automatically includes user and request information from the context.
 func (l *Logger) ErrorCtx(ctx context.Context, msg string, err error, args ...any) {
 	allArgs := append([]any{"error", err}, args...)
 	l.Logger.ErrorContext(ctx, msg, append(l.extractContextFields(ctx), allArgs...)...)
@@ -110,7 +105,6 @@ func (l *Logger) Fatalf(format string, args ...any) {
 }
 
 // FatalfCtx logs a fatal error message with formatting and context fields, then exits the program.
-// It automatically includes user and request information from the context before exiting.
 func (l *Logger) FatalfCtx(ctx context.Context, format string, args ...any) {
 	contextFields := l.extractContextFields(ctx)
 	l.Logger.ErrorContext(ctx, fmt.Sprintf(format, args...), contextFields...)
@@ -118,7 +112,6 @@ func (l *Logger) FatalfCtx(ctx context.Context, format string, args ...any) {
 }
 
 // extractContextFields extracts relevant logging fields from the request context.
-// It looks for user information, request IDs, and session data commonly added by middleware.
 func (l *Logger) extractContextFields(ctx context.Context) []any {
 	var fields []any
 

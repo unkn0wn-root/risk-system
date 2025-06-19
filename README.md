@@ -53,7 +53,7 @@ Project Structure:
 
 ### Services
 - **API Gateway** - REST endpoints, authentication, request routing
-- **User Service** - User management, workflow orchestration, PostgreSQL persistence
+- **User Service** - User management, workflow orchestration, PostgreSQL
 - **Risk Engine** - Fraud detection, configurable risk rules, analytics
 - **Notification Service** - Multi-channel notifications (email, SMS, push)
 
@@ -66,14 +66,14 @@ Project Structure:
 make run
 ```
 
-**Test the system:**
-```bash
-curl http://localhost:8080/api/v1/health
-```
+**Access the API:**
+- **API Documentation**: http://localhost:8080/api/docs (Swagger UI)
+- **OpenAPI Spec**: http://localhost:8080/api/docs/openapi.json
+- **Health Check**: http://localhost:8080/api/v1/health
 
 **Create a user:**
 ```bash
-curl -X POST http://localhost:8080/api/v1/users \
+curl -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email": "johnny_not_fake_at_all@fakeasfake.com", "first_name": "Johnny", "last_name": "Fake", "password": "HereIsMyFakePassword"}'
 ```
@@ -89,16 +89,44 @@ curl -X POST http://localhost:8080/api/v1/users \
 
 ## Key Features
 
+- **OpenAPI 3.0 Documentation** - Interactive Swagger UI with API documentation
 - **Automated Risk Detection** - Real-time fraud screening with configurable rules
 - **Multi-Channel Notifications** - Email, SMS, and push notification delivery
 - **Event-Driven Architecture** - Asynchronous processing with RabbitMQ
-- **JWT Authentication** - Role-based access control
+- **JWT Authentication** - Role-based access control with Bearer token support
 
-## API Endpoints
+## API Documentation
 
-- **Health**: `GET /api/v1/health`
-- **User Management**: `POST /api/v1/users`, `GET /api/v1/users/{id}`
-- **Authentication**: `POST /api/v1/auth/register`, `POST /api/v1/auth/login`
+The API is fully documented using **OpenAPI 3.0.3** specification with interactive Swagger UI:
+
+- **Interactive Documentation**: http://localhost:8080/api/docs
+- **OpenAPI Specification**: http://localhost:8080/api/docs/openapi.json
+
+### Key Endpoints
+
+**Authentication**
+- `POST /api/v1/auth/register` - User registration
+- `POST /api/v1/auth/login` - User login with JWT tokens
+- `POST /api/v1/auth/refresh` - Refresh JWT token
+- `GET /api/v1/profile` - Get authenticated user profile
+
+**User Management** (Role-based access)
+- `GET /api/v1/users` - List users (Admin only)
+- `POST /api/v1/users` - Create user (Admin only)
+- `GET /api/v1/users/{id}` - Get user details
+- `PUT /api/v1/users/{id}` - Update user
+
+**Risk Assessment**
+- `POST /api/v1/risk/check` - Perform risk assessment
+
+**Risk Management** (Admin only)
+- `GET /api/v1/risk/rules` - List risk rules
+- `POST /api/v1/risk/rules` - Create risk rule
+- `PUT /api/v1/risk/rules/{id}` - Update risk rule
+- `DELETE /api/v1/risk/rules/{id}` - Delete risk rule
+
+**System**
+- `GET /api/v1/health` - Health check
 
 ## Services & Ports
 
@@ -127,8 +155,9 @@ make test-performance
 ## Technology Stack
 
 - **Backend**: Go, gRPC, Protocol Buffers
+- **API Documentation**: OpenAPI 3.0.3, Swagger UI
 - **Database**: PostgreSQL with GORM
 - **Messaging**: RabbitMQ
-- **Authentication**: JWT tokens
+- **Authentication**: JWT tokens with Bearer authentication
 - **Deployment**: Docker, Docker Compose
 - **External APIs**: SendGrid (email), Twilio (SMS)

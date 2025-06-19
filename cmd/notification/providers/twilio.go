@@ -9,7 +9,7 @@ import (
 )
 
 // TwilioProvider implements the SMSProvider interface using Twilio's API.
-// It handles authentication and SMS formatting for the Twilio service.
+// handles authentication and SMS formatting for the Twilio service.
 type TwilioProvider struct {
 	client     *twilio.RestClient
 	fromNumber string
@@ -35,7 +35,7 @@ func NewTwilioProvider(accountSid, authToken, fromNumber string) *TwilioProvider
 }
 
 // SendSMS sends an SMS message using the Twilio API.
-// It validates the client configuration and handles API errors.
+// validates the client configuration and handles API errors.
 func (p *TwilioProvider) SendSMS(to, message string) error {
 	if p.client == nil {
 		return fmt.Errorf("Twilio client not configured")

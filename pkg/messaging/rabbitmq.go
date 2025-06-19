@@ -17,7 +17,6 @@ type RabbitMQ struct {
 }
 
 // NewRabbitMQ creates a new RabbitMQ client instance and establishes connection.
-// It opens both a connection and a channel for message operations.
 func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	conn, err := amqp.Dial(url)
 	if err != nil {
@@ -50,7 +49,6 @@ func (r *RabbitMQ) DeclareQueue(name string) error {
 }
 
 // Publish sends a message to the specified queue after JSON marshaling.
-// The message is published with JSON content type and logged for debugging.
 func (r *RabbitMQ) Publish(queueName string, message interface{}) error {
 	body, err := json.Marshal(message)
 	if err != nil {
@@ -75,7 +73,6 @@ func (r *RabbitMQ) Publish(queueName string, message interface{}) error {
 }
 
 // Consume starts consuming messages from the specified queue with auto-acknowledgment.
-// It processes messages using the provided handler function and logs message receipts.
 func (r *RabbitMQ) Consume(queueName string, handler func([]byte) error) error {
 	msgs, err := r.channel.Consume(
 		queueName, // queue
@@ -108,7 +105,7 @@ func (r *RabbitMQ) Consume(queueName string, handler func([]byte) error) error {
 }
 
 // Close properly closes the RabbitMQ channel and connection.
-// It should be called when the RabbitMQ client is no longer needed to prevent resource leaks.
+// should be called when the RabbitMQ client is no longer needed to prevent resource leaks.
 func (r *RabbitMQ) Close() error {
 	if r.channel != nil {
 		r.channel.Close()
