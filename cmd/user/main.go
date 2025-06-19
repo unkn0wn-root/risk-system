@@ -5,6 +5,8 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"gorm.io/gorm"
 
 	"user-risk-system/cmd/user/handlers"
@@ -99,6 +101,12 @@ func main() {
 	)
 
 	pb_user.RegisterUserServiceServer(s, userHandler)
+
+	// Register health service
+	healthServer := health.NewServer()
+	healthServer.SetServingStatus("", grpc_health_v1.HealthCheckResponse_SERVING)
+	healthServer.SetServingStatus("user.UserService", grpc_health_v1.HealthCheckResponse_SERVING)
+	grpc_health_v1.RegisterHealthServer(s, healthServer)
 
 	appLogger.Info("User service starting on port 50051...")
 	appLogger.Info("gRPC Authentication enabled")
