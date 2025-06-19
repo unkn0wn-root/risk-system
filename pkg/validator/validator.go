@@ -27,7 +27,6 @@ func (v ValidationErrors) Error() string {
 }
 
 // Validator provides a fluent interface for validating data and collecting errors.
-// It allows chaining multiple validation rules and returns all errors at once.
 type Validator struct {
 	errors ValidationErrors // Collection of validation errors encountered
 }
@@ -38,7 +37,6 @@ func New() *Validator {
 }
 
 // Required validates that a string field is not empty after trimming whitespace.
-// Returns the validator for method chaining.
 func (v *Validator) Required(field, value string) *Validator {
 	if strings.TrimSpace(value) == "" {
 		v.errors = append(v.errors, ValidationError{
@@ -63,7 +61,6 @@ func (v *Validator) Email(field, value string) *Validator {
 }
 
 // MinLength validates that a string field meets the minimum length requirement.
-// Returns the validator for method chaining.
 func (v *Validator) MinLength(field, value string, length int) *Validator {
 	if len(value) < length {
 		v.errors = append(v.errors, ValidationError{
@@ -75,7 +72,6 @@ func (v *Validator) MinLength(field, value string, length int) *Validator {
 }
 
 // Phone validates that a string field contains a valid phone number format.
-// Accepts international formats with optional + prefix. Skips validation if empty.
 func (v *Validator) Phone(field, value string) *Validator {
 	phoneRegex := regexp.MustCompile(`^\+?[1-9]\d{1,14}$`)
 	if value != "" && !phoneRegex.MatchString(value) {
@@ -88,7 +84,6 @@ func (v *Validator) Phone(field, value string) *Validator {
 }
 
 // Min validates that a numeric field meets the minimum value requirement.
-// Returns the validator for method chaining.
 func (v *Validator) Min(field string, value float64, min float64) *Validator {
 	if value < min {
 		v.errors = append(v.errors, ValidationError{
@@ -100,7 +95,6 @@ func (v *Validator) Min(field string, value float64, min float64) *Validator {
 }
 
 // Max validates that a numeric field does not exceed the maximum value.
-// Returns the validator for method chaining.
 func (v *Validator) Max(field string, value float64, max float64) *Validator {
 	if value > max {
 		v.errors = append(v.errors, ValidationError{

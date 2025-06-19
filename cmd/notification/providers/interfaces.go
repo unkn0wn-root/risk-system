@@ -1,5 +1,3 @@
-// Package providers defines interfaces for different notification delivery methods.
-// This allows for easy switching between different email, SMS, and push providers.
 package providers
 
 // EmailProvider defines the interface for sending email notifications.

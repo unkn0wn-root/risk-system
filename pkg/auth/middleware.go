@@ -1,4 +1,3 @@
-// Package auth provides HTTP and gRPC authentication middleware for securing endpoints.
 package auth
 
 import (
@@ -15,13 +14,12 @@ import (
 )
 
 // AuthMiddleware provides authentication functionality for both HTTP and gRPC services.
-// It wraps a JWTManager to handle token validation and user context enrichment.
+// wraps a JWTManager to handle token validation and user context enrichment.
 type AuthMiddleware struct {
 	jwtManager *JWTManager
 }
 
 // NewAuthMiddleware creates a new authentication middleware instance.
-// It requires a configured JWTManager for token operations.
 func NewAuthMiddleware(jwtManager *JWTManager) *AuthMiddleware {
 	return &AuthMiddleware{
 		jwtManager: jwtManager,
@@ -29,7 +27,7 @@ func NewAuthMiddleware(jwtManager *JWTManager) *AuthMiddleware {
 }
 
 // HTTPMiddleware provides JWT authentication for HTTP requests.
-// It validates tokens, enriches the request context with user data, and handles public endpoints.
+// validates tokens, enriches the request context with user data, and handles public endpoints.
 func (a *AuthMiddleware) HTTPMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Skip authentication for health checks and public endpoints
@@ -62,7 +60,7 @@ func (a *AuthMiddleware) HTTPMiddleware(next http.Handler) http.Handler {
 }
 
 // RequireRole creates an HTTP middleware that restricts access to users with specific roles.
-// It should be used after the main HTTPMiddleware to enforce role-based authorization.
+// should be used after the main HTTPMiddleware to enforce role-based authorization.
 func (a *AuthMiddleware) RequireRole(roles ...UserRole) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +81,7 @@ func (a *AuthMiddleware) RequireRole(roles ...UserRole) func(http.Handler) http.
 }
 
 // GRPCUnaryInterceptor provides JWT authentication for gRPC unary method calls.
-// It validates tokens, enriches the context with user data, and skips auth for public methods.
+// validates tokens, enriches the context with user data, and skips auth for public methods.
 func (a *AuthMiddleware) GRPCUnaryInterceptor(
 	ctx context.Context,
 	req interface{},
@@ -115,7 +113,6 @@ func (a *AuthMiddleware) GRPCUnaryInterceptor(
 }
 
 // GRPCRequireRole creates a gRPC interceptor that enforces role-based access control.
-// It should be chained after the main authentication interceptor.
 func (a *AuthMiddleware) GRPCRequireRole(roles ...UserRole) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
@@ -137,7 +134,6 @@ func (a *AuthMiddleware) GRPCRequireRole(roles ...UserRole) grpc.UnaryServerInte
 }
 
 // extractTokenFromHTTP extracts JWT token from HTTP request headers or query parameters.
-// It supports both Authorization header (Bearer token) and query parameter formats.
 func (a *AuthMiddleware) extractTokenFromHTTP(r *http.Request) string {
 	// Check Authorization header
 	authHeader := r.Header.Get("Authorization")
@@ -153,7 +149,6 @@ func (a *AuthMiddleware) extractTokenFromHTTP(r *http.Request) string {
 }
 
 // extractTokenFromGRPC extracts JWT token from gRPC metadata.
-// It looks for the authorization header in the incoming metadata.
 func (a *AuthMiddleware) extractTokenFromGRPC(ctx context.Context) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -174,7 +169,6 @@ func (a *AuthMiddleware) extractTokenFromGRPC(ctx context.Context) (string, erro
 }
 
 // isPublicEndpoint determines if an HTTP endpoint should skip authentication.
-// Public endpoints include health checks and authentication-related endpoints.
 func (a *AuthMiddleware) isPublicEndpoint(path string) bool {
 	publicPaths := []string{
 		"/",
@@ -210,7 +204,7 @@ func (a *AuthMiddleware) isPublicGRPCMethod(method string) bool {
 }
 
 // unauthorizedHTTP sends a 401 Unauthorized response with the given message.
-// It sets appropriate headers and logs the unauthorized access attempt.
+// sets appropriate headers and logs the unauthorized access attempt.
 func (a *AuthMiddleware) unauthorizedHTTP(w http.ResponseWriter, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnauthorized)

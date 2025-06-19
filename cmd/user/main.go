@@ -1,5 +1,3 @@
-// Package main implements the user service entry point.
-// This service handles user registration, authentication, and profile management with integrated risk assessment.
 package main
 
 import (
@@ -21,8 +19,6 @@ import (
 	"user-risk-system/pkg/utils"
 )
 
-// main initializes and starts the user service with gRPC endpoints and authentication.
-// It sets up database connections, external service clients, and message queue integration.
 func main() {
 	cfg, err := config.Load()
 	if err != nil {

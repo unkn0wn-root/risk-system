@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -72,11 +71,19 @@ func main() {
 	userHandler := handlers.NewUserHandler(userClient)
 	riskHandler := handlers.NewRiskHandler(riskClient, riskAdminClient)
 	authHandler := handlers.NewAuthHandler(userClient, jwtManager)
+	swaggerHandler := handlers.NewSwaggerHandler()
 
 	r := chi.NewRouter()
 
 	r.Use(middleware.LoggingMiddleware)
 	r.Use(middleware.CORSMiddleware)
+
+	// API Documentation routes
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/api/docs", http.StatusMovedPermanently)
+	})
+	r.Get("/api/docs", swaggerHandler.GetSwaggerUI)
+	r.Get("/api/docs/openapi.json", swaggerHandler.GetOpenAPISpec)
 
 	r.Route("/api/v1", func(r chi.Router) {
 		// Public routes (no authentication required)
@@ -119,32 +126,6 @@ func main() {
 				r.With(authMiddleware.RequireRole(auth.RoleAdmin)).Delete("/rules/{id}", riskHandler.DeleteRiskRule)
 			})
 		})
-	})
-
-	// Welcome page (root route)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		response := map[string]interface{}{
-			"message": "Welcome to User Risk Management System API",
-			"version": "2.0.0",
-			"auth":    "JWT Authentication Enabled",
-			"endpoints": map[string]string{
-				"health":           "GET /api/v1/health",
-				"login":            "POST /api/v1/auth/login",
-				"register":         "POST /api/v1/auth/register",
-				"refresh":          "POST /api/v1/auth/refresh",
-				"profile":          "GET /api/v1/profile (authenticated)",
-				"create_user":      "POST /api/v1/users (admin only)",
-				"get_user":         "GET /api/v1/users/{id} (authenticated)",
-				"update_user":      "PUT /api/v1/users/{id} (authenticated)",
-				"check_risk":       "POST /api/v1/risk/check (authenticated)",
-				"create_risk_rule": "POST /api/v1/risk/rules (admin only)",
-				"list_risk_rules":  "GET /api/v1/risk/rules (admin only)",
-				"update_risk_rule": "PUT /api/v1/risk/rules/{id} (admin only)",
-				"delete_risk_rule": "DELETE /api/v1/risk/rules/{id} (admin only)",
-			},
-		}
-		json.NewEncoder(w).Encode(response)
 	})
 
 	port := cfg.Port

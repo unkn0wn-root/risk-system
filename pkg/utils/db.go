@@ -10,7 +10,7 @@ import (
 )
 
 // setupDatabase initializes the PostgreSQL database connection with optimal settings.
-// It configures the connection pool, tests connectivity, and runs auto-migration for risk models.
+// configures the connection pool, tests connectivity, and runs auto-migration for risk models.
 func SetupDatabase(
 	databaseURL string,
 	gormConfig *gorm.Config,

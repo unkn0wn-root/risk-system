@@ -1,5 +1,3 @@
-// Package models defines the data structures for risk engine entities.
-// It includes risk rules, check results, and database relationships for risk evaluation.
 package models
 
 import (
@@ -25,13 +23,12 @@ type RiskRule struct {
 	ExpiresAt  *time.Time `json:"expires_at" gorm:"index"` // For temporary rules
 }
 
-// TableName specifies the database table name for RiskRule entities.
 func (RiskRule) TableName() string {
 	return "risk_rules"
 }
 
 // RiskCheckResult stores the outcome of a user risk evaluation.
-// It includes the overall risk assessment, score, flags, and matched rules.
+// includes the overall risk assessment, score, flags, and matched rules.
 type RiskCheckResult struct {
 	ID         uint      `json:"id" gorm:"primaryKey;autoIncrement"`
 	CheckID    string    `json:"check_id" gorm:"uniqueIndex;type:varchar(255);not null"`
@@ -44,12 +41,10 @@ type RiskCheckResult struct {
 	CreatedAt  time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt  time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 
-	// Relationships
 	Flags        []RiskCheckFlag      `json:"flags" gorm:"foreignKey:CheckID;references:CheckID"`
 	MatchedRules []RiskCheckRuleMatch `json:"matched_rules" gorm:"foreignKey:CheckID;references:CheckID"`
 }
 
-// TableName specifies the database table name for RiskCheckResult entities.
 func (RiskCheckResult) TableName() string {
 	return "risk_check_results"
 }
@@ -64,13 +59,12 @@ type RiskCheckFlag struct {
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 }
 
-// TableName specifies the database table name for RiskCheckFlag entities.
 func (RiskCheckFlag) TableName() string {
 	return "risk_check_flags"
 }
 
 // RiskCheckRuleMatch records which rules were triggered during risk evaluation.
-// It tracks the specific rule, score contribution, and relationship to the check result.
+// tracks the specific rule, score contribution, and relationship to the check result.
 type RiskCheckRuleMatch struct {
 	ID         uint   `json:"id" gorm:"primaryKey;autoIncrement"`
 	CheckID    string `json:"check_id" gorm:"type:varchar(255);not null;index"`
@@ -81,13 +75,11 @@ type RiskCheckRuleMatch struct {
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 }
 
-// TableName specifies the database table name for RiskCheckRuleMatch entities.
 func (RiskCheckRuleMatch) TableName() string {
 	return "risk_check_rule_matches"
 }
 
 // AutoMigrate runs database migrations for all risk engine models.
-// It creates or updates tables to match the current model definitions.
 func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&RiskRule{},

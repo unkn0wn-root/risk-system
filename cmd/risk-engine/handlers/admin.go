@@ -1,5 +1,3 @@
-// Package handlers implements the risk engine administrative request handlers.
-// It provides CRUD operations for risk rules and management functionality.
 package handlers
 
 import (
@@ -14,7 +12,6 @@ import (
 )
 
 // RiskAdminHandler manages risk rules through administrative gRPC endpoints.
-// It provides create, read, update, and delete operations for risk rules.
 type RiskAdminHandler struct {
 	pb_risk.UnimplementedRiskAdminServiceServer
 	riskRepo   *repository.RiskRepository
@@ -36,7 +33,7 @@ func NewRiskAdminHandler(riskRepo *repository.RiskRepository, logger *logger.Log
 }
 
 // CreateRiskRule adds a new risk rule to the system via gRPC.
-// It validates the request and creates a rule with optional expiration.
+// validates the request and creates a rule with optional expiration.
 func (h *RiskAdminHandler) CreateRiskRule(ctx context.Context, req *pb_risk.CreateRiskRuleRequest) (*pb_risk.CreateRiskRuleResponse, error) {
 	rule := &models.RiskRule{
 		ID:         uuid.New().String(),
@@ -74,7 +71,7 @@ func (h *RiskAdminHandler) CreateRiskRule(ctx context.Context, req *pb_risk.Crea
 }
 
 // UpdateRiskRule modifies an existing risk rule via gRPC.
-// It updates all rule fields except ID and creation timestamp.
+// updates all rule fields except ID and creation timestamp.
 func (h *RiskAdminHandler) UpdateRiskRule(ctx context.Context, req *pb_risk.UpdateRiskRuleRequest) (*pb_risk.UpdateRiskRuleResponse, error) {
 	rule := &models.RiskRule{
 		ID:         req.RuleId,
@@ -104,7 +101,7 @@ func (h *RiskAdminHandler) UpdateRiskRule(ctx context.Context, req *pb_risk.Upda
 }
 
 // ListRiskRules retrieves all active risk rules via gRPC.
-// It returns rules with their current configuration and metadata.
+// returns rules with their current configuration and metadata.
 func (h *RiskAdminHandler) ListRiskRules(ctx context.Context, req *pb_risk.ListRiskRulesRequest) (*pb_risk.ListRiskRulesResponse, error) {
 	rules, err := h.riskRepo.GetActiveRules()
 	if err != nil {
@@ -136,7 +133,7 @@ func (h *RiskAdminHandler) ListRiskRules(ctx context.Context, req *pb_risk.ListR
 }
 
 // DeleteRiskRule permanently removes a risk rule from the system via gRPC.
-// It performs a hard delete and returns an error if the rule doesn't exist.
+// performs a hard delete and returns an error if the rule doesn't exist.
 func (h *RiskAdminHandler) DeleteRiskRule(ctx context.Context, req *pb_risk.DeleteRiskRuleRequest) (*pb_risk.DeleteRiskRuleResponse, error) {
 	if err := h.riskRepo.DeleteRule(req.RuleId); err != nil {
 		h.logger.ErrorCtx(ctx, "Failed to delete risk rule", err)

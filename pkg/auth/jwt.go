@@ -11,7 +11,6 @@ import (
 )
 
 // JWTManager handles JWT token generation, validation, and refresh operations.
-// It encapsulates the secret key, token duration, and issuer information.
 type JWTManager struct {
 	secretKey     string
 	tokenDuration time.Duration
@@ -19,7 +18,7 @@ type JWTManager struct {
 }
 
 // Claims represents the custom JWT claims structure containing user information.
-// It extends the standard JWT registered claims with user-specific data.
+// extends the standard JWT registered claims with user-specific data.
 type Claims struct {
 	UserID   string   `json:"user_id"`
 	Email    string   `json:"email"`
@@ -73,7 +72,6 @@ func (manager *JWTManager) GenerateToken(userID, email string, roles []string) (
 }
 
 // ValidateToken parses and validates a JWT token string, returning the claims if valid.
-// It verifies the signature, expiration, and claim structure.
 func (manager *JWTManager) ValidateToken(tokenString string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(
 		tokenString,
@@ -99,7 +97,6 @@ func (manager *JWTManager) ValidateToken(tokenString string) (*Claims, error) {
 }
 
 // RefreshToken generates a new token from an existing valid token if it's close to expiry.
-// It only refreshes tokens that are within 10 minutes of expiration.
 func (manager *JWTManager) RefreshToken(tokenString string) (string, error) {
 	claims, err := manager.ValidateToken(tokenString)
 	if err != nil {
@@ -125,7 +122,6 @@ func (c *Claims) HasRole(role UserRole) bool {
 }
 
 // HasAnyRole checks if the user has any of the specified roles.
-// Returns true if at least one role matches.
 func (c *Claims) HasAnyRole(roles ...UserRole) bool {
 	for _, role := range roles {
 		if c.HasRole(role) {

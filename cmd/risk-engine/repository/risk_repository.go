@@ -1,5 +1,3 @@
-// Package repository implements data access layer for risk engine entities.
-// It provides CRUD operations and queries for risk rules and related data.
 package repository
 
 import (
@@ -11,7 +9,6 @@ import (
 )
 
 // RiskRepository provides database operations for risk rules and related entities.
-// It encapsulates all database interactions for the risk engine service.
 type RiskRepository struct {
 	db *gorm.DB
 }
@@ -22,7 +19,7 @@ func NewRiskRepository(db *gorm.DB) *RiskRepository {
 }
 
 // GetActiveRules retrieves all active, non-expired risk rules ordered by score.
-// It filters out inactive rules and those past their expiration date.
+// filters out inactive rules and those past their expiration date.
 func (r *RiskRepository) GetActiveRules() ([]models.RiskRule, error) {
 	var rules []models.RiskRule
 
@@ -56,7 +53,7 @@ func (r *RiskRepository) GetRulesByCategory(category string) ([]models.RiskRule,
 }
 
 // CreateRule inserts a new risk rule into the database.
-// It automatically sets creation and update timestamps.
+// automatically sets creation and update timestamps.
 func (r *RiskRepository) CreateRule(rule *models.RiskRule) error {
 	rule.CreatedAt = time.Now()
 	rule.UpdatedAt = time.Now()
@@ -70,7 +67,7 @@ func (r *RiskRepository) CreateRule(rule *models.RiskRule) error {
 }
 
 // UpdateRule modifies an existing risk rule in the database.
-// It updates the modification timestamp automatically.
+// updates the modification timestamp automatically.
 func (r *RiskRepository) UpdateRule(rule *models.RiskRule) error {
 	rule.UpdatedAt = time.Now()
 
@@ -83,7 +80,6 @@ func (r *RiskRepository) UpdateRule(rule *models.RiskRule) error {
 }
 
 // GetRuleByID retrieves a specific risk rule by its unique identifier.
-// It returns an error if the rule is not found.
 func (r *RiskRepository) GetRuleByID(id string) (*models.RiskRule, error) {
 	var rule models.RiskRule
 
@@ -99,7 +95,6 @@ func (r *RiskRepository) GetRuleByID(id string) (*models.RiskRule, error) {
 }
 
 // DeleteRule permanently removes a risk rule from the database.
-// It returns an error if the rule doesn't exist or deletion fails.
 func (r *RiskRepository) DeleteRule(id string) error {
 	result := r.db.Delete(&models.RiskRule{}, "id = ?", id)
 	if result.Error != nil {
