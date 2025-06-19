@@ -20,7 +20,6 @@ import (
 	pb_user "user-risk-system/pkg/proto/user"
 )
 
-// main initializes and starts the API Gateway server with authentication and routing
 func main() {
 	cfg, err := config.Load()
 	if err != nil {
