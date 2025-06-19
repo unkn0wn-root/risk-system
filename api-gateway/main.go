@@ -16,8 +16,8 @@ import (
 	"user-risk-system/pkg/auth"
 	"user-risk-system/pkg/config"
 	"user-risk-system/pkg/logger"
-	pb_risk "user-risk-system/pkg/proto/risk"
-	pb_user "user-risk-system/pkg/proto/user"
+	pb_risk "user-risk-system/proto/risk"
+	pb_user "user-risk-system/proto/user"
 )
 
 func main() {

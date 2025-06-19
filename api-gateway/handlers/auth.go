@@ -8,8 +8,8 @@ import (
 
 	"user-risk-system/pkg/auth"
 	"user-risk-system/pkg/errors"
-	pb_user "user-risk-system/pkg/proto/user"
 	"user-risk-system/pkg/validator"
+	pb_user "user-risk-system/proto/user"
 )
 
 // AuthHandler handles authentication-related HTTP requests
@@ -78,7 +78,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	// Call user service to authenticate
@@ -163,7 +163,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
 	// Call user service to register

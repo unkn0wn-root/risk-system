@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.29.3
-// source: pkg/proto/risk/risk.proto
+// source: proto/risk/risk.proto
 
 package risk
 
@@ -34,7 +34,7 @@ type RiskCheckRequest struct {
 
 func (x *RiskCheckRequest) Reset() {
 	*x = RiskCheckRequest{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[0]
+	mi := &file_proto_risk_risk_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -46,7 +46,7 @@ func (x *RiskCheckRequest) String() string {
 func (*RiskCheckRequest) ProtoMessage() {}
 
 func (x *RiskCheckRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[0]
+	mi := &file_proto_risk_risk_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *RiskCheckRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RiskCheckRequest.ProtoReflect.Descriptor instead.
 func (*RiskCheckRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{0}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *RiskCheckRequest) GetUserId() string {
@@ -110,7 +110,7 @@ type RiskCheckResponse struct {
 
 func (x *RiskCheckResponse) Reset() {
 	*x = RiskCheckResponse{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[1]
+	mi := &file_proto_risk_risk_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -122,7 +122,7 @@ func (x *RiskCheckResponse) String() string {
 func (*RiskCheckResponse) ProtoMessage() {}
 
 func (x *RiskCheckResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[1]
+	mi := &file_proto_risk_risk_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -135,7 +135,7 @@ func (x *RiskCheckResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RiskCheckResponse.ProtoReflect.Descriptor instead.
 func (*RiskCheckResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{1}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *RiskCheckResponse) GetUserId() string {
@@ -194,7 +194,7 @@ type RiskRule struct {
 
 func (x *RiskRule) Reset() {
 	*x = RiskRule{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[2]
+	mi := &file_proto_risk_risk_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -206,7 +206,7 @@ func (x *RiskRule) String() string {
 func (*RiskRule) ProtoMessage() {}
 
 func (x *RiskRule) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[2]
+	mi := &file_proto_risk_risk_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -219,7 +219,7 @@ func (x *RiskRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RiskRule.ProtoReflect.Descriptor instead.
 func (*RiskRule) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{2}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *RiskRule) GetId() string {
@@ -322,7 +322,7 @@ type CreateRiskRuleRequest struct {
 
 func (x *CreateRiskRuleRequest) Reset() {
 	*x = CreateRiskRuleRequest{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[3]
+	mi := &file_proto_risk_risk_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -334,7 +334,7 @@ func (x *CreateRiskRuleRequest) String() string {
 func (*CreateRiskRuleRequest) ProtoMessage() {}
 
 func (x *CreateRiskRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[3]
+	mi := &file_proto_risk_risk_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -347,7 +347,7 @@ func (x *CreateRiskRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRiskRuleRequest.ProtoReflect.Descriptor instead.
 func (*CreateRiskRuleRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{3}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateRiskRuleRequest) GetName() string {
@@ -417,7 +417,7 @@ type CreateRiskRuleResponse struct {
 
 func (x *CreateRiskRuleResponse) Reset() {
 	*x = CreateRiskRuleResponse{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[4]
+	mi := &file_proto_risk_risk_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -429,7 +429,7 @@ func (x *CreateRiskRuleResponse) String() string {
 func (*CreateRiskRuleResponse) ProtoMessage() {}
 
 func (x *CreateRiskRuleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[4]
+	mi := &file_proto_risk_risk_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -442,7 +442,7 @@ func (x *CreateRiskRuleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRiskRuleResponse.ProtoReflect.Descriptor instead.
 func (*CreateRiskRuleResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{4}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateRiskRuleResponse) GetRuleId() string {
@@ -483,7 +483,7 @@ type UpdateRiskRuleRequest struct {
 
 func (x *UpdateRiskRuleRequest) Reset() {
 	*x = UpdateRiskRuleRequest{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[5]
+	mi := &file_proto_risk_risk_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -495,7 +495,7 @@ func (x *UpdateRiskRuleRequest) String() string {
 func (*UpdateRiskRuleRequest) ProtoMessage() {}
 
 func (x *UpdateRiskRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[5]
+	mi := &file_proto_risk_risk_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -508,7 +508,7 @@ func (x *UpdateRiskRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRiskRuleRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRiskRuleRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{5}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdateRiskRuleRequest) GetRuleId() string {
@@ -584,7 +584,7 @@ type UpdateRiskRuleResponse struct {
 
 func (x *UpdateRiskRuleResponse) Reset() {
 	*x = UpdateRiskRuleResponse{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[6]
+	mi := &file_proto_risk_risk_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -596,7 +596,7 @@ func (x *UpdateRiskRuleResponse) String() string {
 func (*UpdateRiskRuleResponse) ProtoMessage() {}
 
 func (x *UpdateRiskRuleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[6]
+	mi := &file_proto_risk_risk_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -609,7 +609,7 @@ func (x *UpdateRiskRuleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRiskRuleResponse.ProtoReflect.Descriptor instead.
 func (*UpdateRiskRuleResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{6}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UpdateRiskRuleResponse) GetSuccess() bool {
@@ -635,7 +635,7 @@ type DeleteRiskRuleRequest struct {
 
 func (x *DeleteRiskRuleRequest) Reset() {
 	*x = DeleteRiskRuleRequest{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[7]
+	mi := &file_proto_risk_risk_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -647,7 +647,7 @@ func (x *DeleteRiskRuleRequest) String() string {
 func (*DeleteRiskRuleRequest) ProtoMessage() {}
 
 func (x *DeleteRiskRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[7]
+	mi := &file_proto_risk_risk_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -660,7 +660,7 @@ func (x *DeleteRiskRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRiskRuleRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRiskRuleRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{7}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeleteRiskRuleRequest) GetRuleId() string {
@@ -680,7 +680,7 @@ type DeleteRiskRuleResponse struct {
 
 func (x *DeleteRiskRuleResponse) Reset() {
 	*x = DeleteRiskRuleResponse{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[8]
+	mi := &file_proto_risk_risk_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +692,7 @@ func (x *DeleteRiskRuleResponse) String() string {
 func (*DeleteRiskRuleResponse) ProtoMessage() {}
 
 func (x *DeleteRiskRuleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[8]
+	mi := &file_proto_risk_risk_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,7 +705,7 @@ func (x *DeleteRiskRuleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRiskRuleResponse.ProtoReflect.Descriptor instead.
 func (*DeleteRiskRuleResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{8}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteRiskRuleResponse) GetSuccess() bool {
@@ -735,7 +735,7 @@ type ListRiskRulesRequest struct {
 
 func (x *ListRiskRulesRequest) Reset() {
 	*x = ListRiskRulesRequest{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[9]
+	mi := &file_proto_risk_risk_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -747,7 +747,7 @@ func (x *ListRiskRulesRequest) String() string {
 func (*ListRiskRulesRequest) ProtoMessage() {}
 
 func (x *ListRiskRulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[9]
+	mi := &file_proto_risk_risk_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -760,7 +760,7 @@ func (x *ListRiskRulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRiskRulesRequest.ProtoReflect.Descriptor instead.
 func (*ListRiskRulesRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{9}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListRiskRulesRequest) GetCategory() string {
@@ -810,7 +810,7 @@ type ListRiskRulesResponse struct {
 
 func (x *ListRiskRulesResponse) Reset() {
 	*x = ListRiskRulesResponse{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[10]
+	mi := &file_proto_risk_risk_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -822,7 +822,7 @@ func (x *ListRiskRulesResponse) String() string {
 func (*ListRiskRulesResponse) ProtoMessage() {}
 
 func (x *ListRiskRulesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[10]
+	mi := &file_proto_risk_risk_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -835,7 +835,7 @@ func (x *ListRiskRulesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRiskRulesResponse.ProtoReflect.Descriptor instead.
 func (*ListRiskRulesResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{10}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListRiskRulesResponse) GetRules() []*RiskRule {
@@ -875,7 +875,7 @@ type GetRiskStatsRequest struct {
 
 func (x *GetRiskStatsRequest) Reset() {
 	*x = GetRiskStatsRequest{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[11]
+	mi := &file_proto_risk_risk_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -887,7 +887,7 @@ func (x *GetRiskStatsRequest) String() string {
 func (*GetRiskStatsRequest) ProtoMessage() {}
 
 func (x *GetRiskStatsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[11]
+	mi := &file_proto_risk_risk_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -900,7 +900,7 @@ func (x *GetRiskStatsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRiskStatsRequest.ProtoReflect.Descriptor instead.
 func (*GetRiskStatsRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{11}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetRiskStatsRequest) GetDays() int32 {
@@ -924,7 +924,7 @@ type RiskStats struct {
 
 func (x *RiskStats) Reset() {
 	*x = RiskStats{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[12]
+	mi := &file_proto_risk_risk_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -936,7 +936,7 @@ func (x *RiskStats) String() string {
 func (*RiskStats) ProtoMessage() {}
 
 func (x *RiskStats) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[12]
+	mi := &file_proto_risk_risk_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -949,7 +949,7 @@ func (x *RiskStats) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RiskStats.ProtoReflect.Descriptor instead.
 func (*RiskStats) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{12}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *RiskStats) GetTotalChecks() int32 {
@@ -1004,7 +1004,7 @@ type FlagCount struct {
 
 func (x *FlagCount) Reset() {
 	*x = FlagCount{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[13]
+	mi := &file_proto_risk_risk_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1016,7 +1016,7 @@ func (x *FlagCount) String() string {
 func (*FlagCount) ProtoMessage() {}
 
 func (x *FlagCount) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[13]
+	mi := &file_proto_risk_risk_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1029,7 +1029,7 @@ func (x *FlagCount) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlagCount.ProtoReflect.Descriptor instead.
 func (*FlagCount) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{13}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *FlagCount) GetFlag() string {
@@ -1057,7 +1057,7 @@ type TrendPoint struct {
 
 func (x *TrendPoint) Reset() {
 	*x = TrendPoint{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[14]
+	mi := &file_proto_risk_risk_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1069,7 +1069,7 @@ func (x *TrendPoint) String() string {
 func (*TrendPoint) ProtoMessage() {}
 
 func (x *TrendPoint) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[14]
+	mi := &file_proto_risk_risk_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1082,7 +1082,7 @@ func (x *TrendPoint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TrendPoint.ProtoReflect.Descriptor instead.
 func (*TrendPoint) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{14}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *TrendPoint) GetDate() string {
@@ -1117,7 +1117,7 @@ type GetRiskStatsResponse struct {
 
 func (x *GetRiskStatsResponse) Reset() {
 	*x = GetRiskStatsResponse{}
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[15]
+	mi := &file_proto_risk_risk_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1129,7 +1129,7 @@ func (x *GetRiskStatsResponse) String() string {
 func (*GetRiskStatsResponse) ProtoMessage() {}
 
 func (x *GetRiskStatsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_risk_risk_proto_msgTypes[15]
+	mi := &file_proto_risk_risk_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1142,7 +1142,7 @@ func (x *GetRiskStatsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRiskStatsResponse.ProtoReflect.Descriptor instead.
 func (*GetRiskStatsResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_proto_risk_risk_proto_rawDescGZIP(), []int{15}
+	return file_proto_risk_risk_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetRiskStatsResponse) GetStats() *RiskStats {
@@ -1166,11 +1166,11 @@ func (x *GetRiskStatsResponse) GetError() string {
 	return ""
 }
 
-var File_pkg_proto_risk_risk_proto protoreflect.FileDescriptor
+var File_proto_risk_risk_proto protoreflect.FileDescriptor
 
-const file_pkg_proto_risk_risk_proto_rawDesc = "" +
+const file_proto_risk_risk_proto_rawDesc = "" +
 	"\n" +
-	"\x19pkg/proto/risk/risk.proto\x12\x04risk\"\x93\x01\n" +
+	"\x15proto/risk/risk.proto\x12\x04risk\"\x93\x01\n" +
 	"\x10RiskCheckRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1d\n" +
@@ -1287,19 +1287,19 @@ const file_pkg_proto_risk_risk_proto_rawDesc = "" +
 	"\fGetRiskStats\x12\x19.risk.GetRiskStatsRequest\x1a\x1a.risk.GetRiskStatsResponseB$Z\"user-risk-system/shared/proto/riskb\x06proto3"
 
 var (
-	file_pkg_proto_risk_risk_proto_rawDescOnce sync.Once
-	file_pkg_proto_risk_risk_proto_rawDescData []byte
+	file_proto_risk_risk_proto_rawDescOnce sync.Once
+	file_proto_risk_risk_proto_rawDescData []byte
 )
 
-func file_pkg_proto_risk_risk_proto_rawDescGZIP() []byte {
-	file_pkg_proto_risk_risk_proto_rawDescOnce.Do(func() {
-		file_pkg_proto_risk_risk_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pkg_proto_risk_risk_proto_rawDesc), len(file_pkg_proto_risk_risk_proto_rawDesc)))
+func file_proto_risk_risk_proto_rawDescGZIP() []byte {
+	file_proto_risk_risk_proto_rawDescOnce.Do(func() {
+		file_proto_risk_risk_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_risk_risk_proto_rawDesc), len(file_proto_risk_risk_proto_rawDesc)))
 	})
-	return file_pkg_proto_risk_risk_proto_rawDescData
+	return file_proto_risk_risk_proto_rawDescData
 }
 
-var file_pkg_proto_risk_risk_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
-var file_pkg_proto_risk_risk_proto_goTypes = []any{
+var file_proto_risk_risk_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_proto_risk_risk_proto_goTypes = []any{
 	(*RiskCheckRequest)(nil),       // 0: risk.RiskCheckRequest
 	(*RiskCheckResponse)(nil),      // 1: risk.RiskCheckResponse
 	(*RiskRule)(nil),               // 2: risk.RiskRule
@@ -1317,7 +1317,7 @@ var file_pkg_proto_risk_risk_proto_goTypes = []any{
 	(*TrendPoint)(nil),             // 14: risk.TrendPoint
 	(*GetRiskStatsResponse)(nil),   // 15: risk.GetRiskStatsResponse
 }
-var file_pkg_proto_risk_risk_proto_depIdxs = []int32{
+var file_proto_risk_risk_proto_depIdxs = []int32{
 	2,  // 0: risk.ListRiskRulesResponse.rules:type_name -> risk.RiskRule
 	13, // 1: risk.RiskStats.top_flags:type_name -> risk.FlagCount
 	14, // 2: risk.RiskStats.trend_data:type_name -> risk.TrendPoint
@@ -1341,26 +1341,26 @@ var file_pkg_proto_risk_risk_proto_depIdxs = []int32{
 	0,  // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_pkg_proto_risk_risk_proto_init() }
-func file_pkg_proto_risk_risk_proto_init() {
-	if File_pkg_proto_risk_risk_proto != nil {
+func init() { file_proto_risk_risk_proto_init() }
+func file_proto_risk_risk_proto_init() {
+	if File_proto_risk_risk_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pkg_proto_risk_risk_proto_rawDesc), len(file_pkg_proto_risk_risk_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_risk_risk_proto_rawDesc), len(file_proto_risk_risk_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
-		GoTypes:           file_pkg_proto_risk_risk_proto_goTypes,
-		DependencyIndexes: file_pkg_proto_risk_risk_proto_depIdxs,
-		MessageInfos:      file_pkg_proto_risk_risk_proto_msgTypes,
+		GoTypes:           file_proto_risk_risk_proto_goTypes,
+		DependencyIndexes: file_proto_risk_risk_proto_depIdxs,
+		MessageInfos:      file_proto_risk_risk_proto_msgTypes,
 	}.Build()
-	File_pkg_proto_risk_risk_proto = out.File
-	file_pkg_proto_risk_risk_proto_goTypes = nil
-	file_pkg_proto_risk_risk_proto_depIdxs = nil
+	File_proto_risk_risk_proto = out.File
+	file_proto_risk_risk_proto_goTypes = nil
+	file_proto_risk_risk_proto_depIdxs = nil
 }

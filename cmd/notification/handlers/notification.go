@@ -16,7 +16,7 @@ import (
 	"user-risk-system/pkg/logger"
 	"user-risk-system/pkg/messaging"
 	"user-risk-system/pkg/models"
-	pb_notification "user-risk-system/pkg/proto/notification"
+	pb_notification "user-risk-system/proto/notification"
 )
 
 // NotificationHandler orchestrates notification delivery across multiple channels and providers.

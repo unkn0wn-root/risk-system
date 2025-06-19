@@ -6,7 +6,7 @@ import (
 	"user-risk-system/cmd/risk-engine/models"
 	"user-risk-system/cmd/risk-engine/repository"
 	"user-risk-system/pkg/logger"
-	pb_risk "user-risk-system/pkg/proto/risk"
+	pb_risk "user-risk-system/proto/risk"
 
 	"github.com/google/uuid"
 )

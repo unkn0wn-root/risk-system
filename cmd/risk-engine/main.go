@@ -14,8 +14,8 @@ import (
 	"user-risk-system/pkg/config"
 	"user-risk-system/pkg/health"
 	"user-risk-system/pkg/logger"
-	pb_risk "user-risk-system/pkg/proto/risk"
 	"user-risk-system/pkg/utils"
+	pb_risk "user-risk-system/proto/risk"
 )
 
 // riskConfig holds the configuration specific to the risk engine service.

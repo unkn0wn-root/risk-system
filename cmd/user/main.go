@@ -14,10 +14,10 @@ import (
 	"user-risk-system/pkg/health"
 	"user-risk-system/pkg/logger"
 	"user-risk-system/pkg/messaging"
-	pb_notification "user-risk-system/pkg/proto/notification"
-	pb_risk "user-risk-system/pkg/proto/risk"
-	pb_user "user-risk-system/pkg/proto/user"
 	"user-risk-system/pkg/utils"
+	pb_notification "user-risk-system/proto/notification"
+	pb_risk "user-risk-system/proto/risk"
+	pb_user "user-risk-system/proto/user"
 )
 
 func main() {

@@ -23,9 +23,9 @@ proto:
 	fi
 	protoc --go_out=. --go_opt=paths=source_relative \
 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		pkg/proto/user/*.proto \
-		pkg/proto/risk/*.proto \
-		pkg/proto/notification/*.proto
+		proto/user/*.proto \
+		proto/risk/*.proto \
+		proto/notification/*.proto
 
 build-local:
 	@echo "🔨 Building services locally..."
@@ -49,6 +49,9 @@ run:
 	@echo ""
 	@echo "📋 Quick test commands:"
 	@echo "curl http://localhost:8080/api/v1/health"
+	@echo ""
+	@echo "📚 API Documentation:"
+	@echo "API Documentation: http://localhost:8080/api/docs (swagger)"
 
 stop:
 	@echo "🛑 Stopping all services..."
