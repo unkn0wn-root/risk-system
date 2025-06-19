@@ -12,6 +12,7 @@ import (
 	"user-risk-system/cmd/notification/handlers"
 	"user-risk-system/cmd/notification/templates"
 	"user-risk-system/pkg/config"
+	"user-risk-system/pkg/health"
 	"user-risk-system/pkg/logger"
 	"user-risk-system/pkg/messaging"
 	pb_notification "user-risk-system/pkg/proto/notification"
@@ -66,6 +67,9 @@ func main() {
 
 	s := grpc.NewServer()
 	pb_notification.RegisterNotificationServiceServer(s, notificationHandler)
+
+	// Health service
+	health.RegisterHealthServiceWithDefaults(s, "notification.NotificationService")
 
 	go func() {
 		nl.Info("Notification service starting on port %s...", cfg.Port)

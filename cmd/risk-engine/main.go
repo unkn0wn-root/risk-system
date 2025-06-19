@@ -5,12 +5,14 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"gorm.io/gorm"
 
 	"user-risk-system/cmd/risk-engine/handlers"
 	"user-risk-system/cmd/risk-engine/repository"
 	"user-risk-system/cmd/risk-engine/services"
 	"user-risk-system/pkg/config"
+	"user-risk-system/pkg/health"
 	"user-risk-system/pkg/logger"
 	pb_risk "user-risk-system/pkg/proto/risk"
 	"user-risk-system/pkg/utils"
@@ -82,6 +84,16 @@ func main() {
 	// Register services
 	pb_risk.RegisterRiskServiceServer(s, riskHandler)
 	pb_risk.RegisterRiskAdminServiceServer(s, riskAdminHandler)
+
+	// Health service
+	healthConfig := health.Config{
+		OverallStatus: grpc_health_v1.HealthCheckResponse_SERVING,
+		Services: []health.ServiceHealth{
+			{Name: "risk.RiskService", Status: grpc_health_v1.HealthCheckResponse_SERVING},
+			{Name: "risk.RiskAdminService", Status: grpc_health_v1.HealthCheckResponse_SERVING},
+		},
+	}
+	health.RegisterHealthService(s, healthConfig)
 
 	rl.Info("Risk service starting", "port", rcfg.Port)
 	if err := s.Serve(lis); err != nil {

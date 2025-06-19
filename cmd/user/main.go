@@ -11,6 +11,7 @@ import (
 	"user-risk-system/cmd/user/repository"
 	"user-risk-system/pkg/auth"
 	"user-risk-system/pkg/config"
+	"user-risk-system/pkg/health"
 	"user-risk-system/pkg/logger"
 	"user-risk-system/pkg/messaging"
 	pb_notification "user-risk-system/pkg/proto/notification"
@@ -99,6 +100,8 @@ func main() {
 	)
 
 	pb_user.RegisterUserServiceServer(s, userHandler)
+
+	health.RegisterHealthServiceWithDefaults(s, "user.UserService")
 
 	appLogger.Info("User service starting on port 50051...")
 	appLogger.Info("gRPC Authentication enabled")
