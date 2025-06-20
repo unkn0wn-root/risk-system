@@ -55,6 +55,9 @@ type Config struct {
 	MetricsEnabled bool // Enable application metrics collection
 	TracingEnabled bool // Enable distributed tracing
 
+	// Service Communication
+	RequireServiceJWTForwarding bool // Whether to enforce JWT authentication on service-to-service gRPC calls
+
 	TemplatesDirectoryPath string // Path to notification templates directory
 }
 
@@ -94,6 +97,9 @@ func Load() (*Config, error) {
 		RateLimitWindow:   Env.Duration("RATE_LIMIT_WINDOW", time.Minute),
 		MetricsEnabled:    Env.Bool("METRICS_ENABLED", false),
 		TracingEnabled:    Env.Bool("TRACING_ENABLED", false),
+
+		// Service Communication - default to true unless explicitly disabled
+		RequireServiceJWTForwarding: Env.Bool("REQUIRE_SERVICE_JWT_FORWARDING", true),
 
 		// Database
 		DatabaseURL:         Env.String("DATABASE_URL", ""),
