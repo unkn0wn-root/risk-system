@@ -93,18 +93,26 @@ func main() {
 		appLogger.Fatalf("Failed to listen: %v", err)
 	}
 
-	jwtManager := auth.NewJWTManager(cfg.JWTSecret, cfg.JWTDuration, cfg.JWTIssuer)
-	authMiddleware := auth.NewAuthMiddleware(jwtManager)
-	s := grpc.NewServer(
-		grpc.UnaryInterceptor(authMiddleware.GRPCUnaryInterceptor),
-	)
+	// JWT is enabled by default
+	// if you want to explicitly disable it, you have to set REQUIRE_SERVICE_JWT_FORWARDING to false
+	var s *grpc.Server
+	if cfg.RequireServiceJWTForwarding {
+		jwtManager := auth.NewJWTManager(cfg.JWTSecret, cfg.JWTDuration, cfg.JWTIssuer)
+		authMiddleware := auth.NewAuthMiddleware(jwtManager)
+		s = grpc.NewServer(
+			grpc.UnaryInterceptor(authMiddleware.GRPCUnaryInterceptor),
+		)
+		appLogger.Info("gRPC JWT authentication enabled")
+	} else {
+		s = grpc.NewServer()
+		appLogger.Warn("gRPC JWT authentication disabled")
+	}
 
 	pb_user.RegisterUserServiceServer(s, userHandler)
 
 	health.RegisterHealthServiceWithDefaults(s, "user.UserService")
 
 	appLogger.Info("User service starting on port 50051...")
-	appLogger.Info("gRPC Authentication enabled")
 	if err := s.Serve(lis); err != nil {
 		appLogger.Fatalf("Failed to serve: %v", err)
 	}
