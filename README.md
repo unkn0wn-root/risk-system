@@ -24,12 +24,12 @@ A microservices-based system for user management with automated risk detection a
 ┌─────────┐               ┌─────────┐               ┌─────────────┐
 │  User   │               │  Risk   │               │Notification │
 │Service  │◄──────────────┤ Engine  │──────────────►│   Service   │
-│(50051)  │   Risk Check  │(50052)  │  Risk Events │   (50053)   │
+│(50051)  │   Risk Check  │(50052)  │  Risk Events  │   (50053)   │
 └────┬────┘               └─────────┘               └─────┬───────┘
      │                                                    │
      │ PostgreSQL                            RabbitMQ ◄───┘
      v                                           │
-┌─────────┐                                     │
+┌─────────┐                                      │
 │Database │                         ┌───────────v──────────┐
 │(5432)   │                         │   External APIs      │
 └─────────┘                         │ ┌─────────────────┐  │
