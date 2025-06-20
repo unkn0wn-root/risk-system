@@ -44,10 +44,12 @@ Project Structure:
 │   ├── user/             # User management service
 │   ├── risk-engine/      # Risk detection & analytics
 │   └── notification/     # Multi-channel notifications
+│   └── ...
 ├── pkg/                  # Shared libraries
 │   ├── auth/             # JWT authentication
-│   ├── proto/            # gRPC definitions
 │   └── messaging/        # RabbitMQ client
+│   └── ...
+├── proto/                # gRPC definitions
 └── scripts/              # Database initialization
 ```
 
