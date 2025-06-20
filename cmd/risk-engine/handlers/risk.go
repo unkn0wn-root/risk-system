@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"time"
 	"user-risk-system/cmd/risk-engine/services"
 	"user-risk-system/pkg/logger"
 	pb_risk "user-risk-system/proto/risk"
@@ -43,7 +44,9 @@ func (h *RiskHandler) CheckRisk(ctx context.Context, req *pb_risk.RiskCheckReque
 	}
 
 	go func() {
-		if err := h.analytics.StoreRiskResult(ctx, result); err != nil {
+		analyticsCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := h.analytics.StoreRiskResult(analyticsCtx, result); err != nil {
 			h.logger.Error("Failed to store risk result for analytics", err)
 		}
 	}()
