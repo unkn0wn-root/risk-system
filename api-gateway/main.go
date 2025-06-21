@@ -76,7 +76,7 @@ func main() {
 
 	r.Use(middleware.NewLoggingMiddleware(middleware.LoggerMiddlewareConfig{
 		Log:       appLogger,
-		SkipPaths: []string{"/health"},
+		SkipPaths: []string{"/api/v1/health"}, // @todo - get this from config
 	}))
 	r.Use(middleware.CORSMiddleware(middleware.LoggerMiddlewareConfig{
 		AllowedOrigins: cfg.AllowedOrigins,

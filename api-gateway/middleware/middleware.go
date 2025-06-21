@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 	"time"
 	"user-risk-system/pkg/logger"
@@ -44,7 +43,12 @@ func NewLoggingMiddleware(config LoggerMiddlewareConfig) func(http.Handler) http
 			next.ServeHTTP(rw, r)
 
 			duration := time.Since(start)
-			log.Printf("%s %s %d %v", r.Method, r.URL.Path, rw.statusCode, duration)
+			config.Log.Info("HTTP request",
+				"method", r.Method,
+				"path", r.URL.Path,
+				"status", rw.statusCode,
+				"duration", duration,
+			)
 		})
 	}
 }
