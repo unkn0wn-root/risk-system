@@ -11,10 +11,11 @@ import (
 // It includes service settings, database connections, external service URLs, and security parameters.
 type Config struct {
 	// Service configuration
-	ServiceName string // Name of the service
-	Port        string // HTTP server port
-	Environment string // Runtime environment (dev, staging, prod)
-	LogLevel    string // Logging level (debug, info, warn, error)
+	ServiceName    string   // Name of the service
+	Port           string   // HTTP server port
+	Environment    string   // Runtime environment (dev, staging, prod)
+	LogLevel       string   // Logging level (debug, info, warn, error)
+	AllowedOrigins []string // Allowed cors origins
 
 	// Database
 	DatabaseURL         string        // Primary database connection string
@@ -109,6 +110,7 @@ func Load() (*Config, error) {
 
 		// Common
 		TemplatesDirectoryPath: Env.String("TEMPLATES_PATH", ""),
+		AllowedOrigins:         strings.Split(Env.String("ALLOWED_CORS", "*"), ","),
 	}
 
 	// Validate required fields

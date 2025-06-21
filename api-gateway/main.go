@@ -74,8 +74,13 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Use(middleware.LoggingMiddleware)
-	r.Use(middleware.CORSMiddleware)
+	r.Use(middleware.NewLoggingMiddleware(middleware.LoggerMiddlewareConfig{
+		Log:       appLogger,
+		SkipPaths: []string{"/health"},
+	}))
+	r.Use(middleware.CORSMiddleware(middleware.LoggerMiddlewareConfig{
+		AllowedOrigins: cfg.AllowedOrigins,
+	}))
 
 	// API Documentation routes
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
