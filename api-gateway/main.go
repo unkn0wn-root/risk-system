@@ -34,11 +34,6 @@ func main() {
 	}
 
 	appLogger := logger.New(logConfig)
-	appLogger.Info("Starting API Gateway",
-		"port", cfg.Port,
-		"environment", cfg.Environment,
-		"jwt_issuer", cfg.JWTIssuer,
-	)
 
 	jwtManager := auth.NewJWTManager(cfg.JWTSecret, cfg.JWTDuration, cfg.JWTIssuer)
 	authMiddleware := auth.NewAuthMiddleware(jwtManager)
