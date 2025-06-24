@@ -127,7 +127,7 @@ func (h *UserHandler) Register(ctx context.Context, req *pb_user.RegisterRequest
 	}
 
 	ctxWithUserId := scontext.WithUserID(ctx, user.ID).Build()
-	h.logger.InfoCtx(ctxWithUserId, "User registered successfully", "user_id", user.ID)
+	h.logger.InfoCtx(ctxWithUserId, "User registered successfully")
 
 	pbUser := h.userToProto(user)
 

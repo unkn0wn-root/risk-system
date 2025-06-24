@@ -6,6 +6,17 @@ import (
 	"context"
 )
 
+type contextKey string
+
+const (
+	UserIDKey    contextKey = "user_id"
+	RequestIDKey contextKey = "request_id"
+	UserEmailKey contextKey = "user_mail"
+	SessionIDKey contextKey = "session_id"
+	UserRoleKey  contextKey = "user_role"
+	UserRolesKey contextKey = "user_roles"
+)
+
 // Builder provides a fluent interface for building enriched contexts.
 type Builder struct {
 	ctx context.Context // The underlying context being enriched
@@ -19,7 +30,7 @@ func New(ctx context.Context) *Builder {
 // WithUserID adds a user ID to the context if the value is not empty.
 func (b *Builder) WithUserID(userID string) *Builder {
 	if userID != "" {
-		b.ctx = context.WithValue(b.ctx, "user_id", userID)
+		b.ctx = context.WithValue(b.ctx, UserIDKey, userID)
 	}
 	return b
 }
@@ -27,7 +38,7 @@ func (b *Builder) WithUserID(userID string) *Builder {
 // WithUserEmail adds a user email to the context if the value is not empty.
 func (b *Builder) WithUserEmail(email string) *Builder {
 	if email != "" {
-		b.ctx = context.WithValue(b.ctx, "user_email", email)
+		b.ctx = context.WithValue(b.ctx, UserEmailKey, email)
 	}
 	return b
 }
@@ -35,7 +46,7 @@ func (b *Builder) WithUserEmail(email string) *Builder {
 // WithUserRole adds a single user role to the context if the value is not empty.
 func (b *Builder) WithUserRole(role string) *Builder {
 	if role != "" {
-		b.ctx = context.WithValue(b.ctx, "user_role", role)
+		b.ctx = context.WithValue(b.ctx, UserRoleKey, role)
 	}
 	return b
 }
@@ -43,7 +54,7 @@ func (b *Builder) WithUserRole(role string) *Builder {
 // WithUserRoles adds multiple user roles to the context if the slice is not empty.
 func (b *Builder) WithUserRoles(roles []string) *Builder {
 	if len(roles) > 0 {
-		b.ctx = context.WithValue(b.ctx, "user_roles", roles)
+		b.ctx = context.WithValue(b.ctx, UserRolesKey, roles)
 	}
 	return b
 }
@@ -51,7 +62,7 @@ func (b *Builder) WithUserRoles(roles []string) *Builder {
 // WithRequestID adds a request ID to the context for request tracing if the value is not empty.
 func (b *Builder) WithRequestID(requestID string) *Builder {
 	if requestID != "" {
-		b.ctx = context.WithValue(b.ctx, "request_id", requestID)
+		b.ctx = context.WithValue(b.ctx, RequestIDKey, requestID)
 	}
 	return b
 }
@@ -59,7 +70,7 @@ func (b *Builder) WithRequestID(requestID string) *Builder {
 // WithSessionID adds a session ID to the context for session tracking if the value is not empty.
 func (b *Builder) WithSessionID(sessionID string) *Builder {
 	if sessionID != "" {
-		b.ctx = context.WithValue(b.ctx, "session_id", sessionID)
+		b.ctx = context.WithValue(b.ctx, SessionIDKey, sessionID)
 	}
 	return b
 }

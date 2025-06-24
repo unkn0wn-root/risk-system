@@ -32,7 +32,6 @@ func main() {
 		ServiceName: "api-gateway",
 		Environment: cfg.Environment,
 	}
-
 	appLogger := logger.New(logConfig)
 
 	jwtManager := auth.NewJWTManager(cfg.JWTSecret, cfg.JWTDuration, cfg.JWTIssuer)

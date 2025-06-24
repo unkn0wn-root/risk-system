@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"time"
+	"user-risk-system/pkg/scontext"
 )
 
 // Logger wraps the standard slog.Logger with additional context-aware logging methods.
@@ -115,28 +116,28 @@ func (l *Logger) FatalfCtx(ctx context.Context, format string, args ...any) {
 func (l *Logger) extractContextFields(ctx context.Context) []any {
 	var fields []any
 
-	if userID := ctx.Value("user_id"); userID != nil {
+	if userID := ctx.Value(scontext.UserIDKey); userID != nil {
 		fields = append(fields, "user_id", userID)
 	}
-	if userEmail := ctx.Value("user_email"); userEmail != nil {
+	if userEmail := ctx.Value(scontext.UserEmailKey); userEmail != nil {
 		fields = append(fields, "user_email", userEmail)
 	}
 
-	if userRole := ctx.Value("user_role"); userRole != nil {
+	if userRole := ctx.Value(scontext.UserRoleKey); userRole != nil {
 		fields = append(fields, "user_role", userRole)
 	}
 
-	if userRoles := ctx.Value("user_roles"); userRoles != nil {
+	if userRoles := ctx.Value(scontext.UserRolesKey); userRoles != nil {
 		if roles, ok := userRoles.([]string); ok {
 			fields = append(fields, "user_roles", roles)
 		}
 	}
 
 	// Request fields
-	if requestID := ctx.Value("request_id"); requestID != nil {
+	if requestID := ctx.Value(scontext.RequestIDKey); requestID != nil {
 		fields = append(fields, "request_id", requestID)
 	}
-	if sessionID := ctx.Value("session_id"); sessionID != nil {
+	if sessionID := ctx.Value(scontext.SessionIDKey); sessionID != nil {
 		fields = append(fields, "session_id", sessionID)
 	}
 
