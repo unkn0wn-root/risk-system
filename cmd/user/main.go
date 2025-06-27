@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"user-risk-system/cmd/user/handlers"
+	"user-risk-system/cmd/user/models"
 	"user-risk-system/cmd/user/repository"
 	"user-risk-system/pkg/auth"
 	"user-risk-system/pkg/config"
@@ -39,6 +40,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+
+	// Run auto-migration for user models
+	appLogger.Info("Running user database migration...")
+	if err := models.AutoMigrate(db); err != nil {
+		appLogger.Fatalf("Failed to run migration: %v", err)
+	}
+	appLogger.Info("User database migration completed successfully")
 
 	sdb, err := db.DB()
 	if err != nil {

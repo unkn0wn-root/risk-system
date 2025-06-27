@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package notification;
-option go_package = "user-risk-system/shared/proto/notification";
+option go_package = "user-risk-system/proto/notification";
 
 service NotificationService {
   rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);

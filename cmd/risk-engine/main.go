@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"user-risk-system/cmd/risk-engine/handlers"
+	"user-risk-system/cmd/risk-engine/models"
 	"user-risk-system/cmd/risk-engine/repository"
 	"user-risk-system/cmd/risk-engine/services"
 	"user-risk-system/pkg/config"
@@ -51,6 +52,13 @@ func main() {
 	if err != nil {
 		rl.Fatalf("Failed to setup database: %v", err)
 	}
+
+	// Run auto-migration for user models
+	rl.Info("Running risk engine database migration...")
+	if err := models.AutoMigrate(db); err != nil {
+		rl.Fatalf("Failed to run auto-migration: %v", err)
+	}
+	rl.Info("Risk engine database migration completed successfully")
 
 	sqlDB, err := db.DB()
 	if err != nil {

@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"user-risk-system/cmd/risk-engine/models"
 	"user-risk-system/pkg/config"
 	"user-risk-system/pkg/logger"
 
@@ -37,13 +36,6 @@ func SetupDatabase(
 	if err := sqlDB.Ping(); err != nil {
 		return nil, err
 	}
-
-	// Run auto-migration
-	logger.Info("Running database auto-migration...")
-	if err := models.AutoMigrate(db); err != nil {
-		return nil, err
-	}
-	logger.Info("Database auto-migration completed successfully")
 
 	return db, nil
 }
