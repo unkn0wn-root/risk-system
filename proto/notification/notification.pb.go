@@ -155,7 +155,7 @@ const file_proto_notification_notification_proto_rawDesc = "" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05error2x\n" +
 	"\x13NotificationService\x12a\n" +
-	"\x10SendNotification\x12%.notification.SendNotificationRequest\x1a&.notification.SendNotificationResponseB,Z*user-risk-system/shared/proto/notificationb\x06proto3"
+	"\x10SendNotification\x12%.notification.SendNotificationRequest\x1a&.notification.SendNotificationResponseB%Z#user-risk-system/proto/notificationb\x06proto3"
 
 var (
 	file_proto_notification_notification_proto_rawDescOnce sync.Once

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package user;
-option go_package = "user-risk-system/shared/proto/user";
+option go_package = "user-risk-system/proto/user";
 
 import "google/protobuf/timestamp.proto";
 

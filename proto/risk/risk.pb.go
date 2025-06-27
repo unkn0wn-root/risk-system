@@ -1284,7 +1284,7 @@ const file_proto_risk_risk_proto_rawDesc = "" +
 	"\x0eUpdateRiskRule\x12\x1b.risk.UpdateRiskRuleRequest\x1a\x1c.risk.UpdateRiskRuleResponse\x12K\n" +
 	"\x0eDeleteRiskRule\x12\x1b.risk.DeleteRiskRuleRequest\x1a\x1c.risk.DeleteRiskRuleResponse\x12H\n" +
 	"\rListRiskRules\x12\x1a.risk.ListRiskRulesRequest\x1a\x1b.risk.ListRiskRulesResponse\x12E\n" +
-	"\fGetRiskStats\x12\x19.risk.GetRiskStatsRequest\x1a\x1a.risk.GetRiskStatsResponseB$Z\"user-risk-system/shared/proto/riskb\x06proto3"
+	"\fGetRiskStats\x12\x19.risk.GetRiskStatsRequest\x1a\x1a.risk.GetRiskStatsResponseB\x1dZ\x1buser-risk-system/proto/riskb\x06proto3"
 
 var (
 	file_proto_risk_risk_proto_rawDescOnce sync.Once

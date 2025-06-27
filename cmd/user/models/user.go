@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 // User represents a system user with authentication and profile information.
@@ -71,4 +72,9 @@ func (u *User) RemoveRole(role string) {
 // GetFullName returns the user's complete name by combining first and last names.
 func (u *User) GetFullName() string {
 	return u.FirstName + " " + u.LastName
+}
+
+// AutoMigrate runs GORM auto-migration for user models
+func AutoMigrate(db *gorm.DB) error {
+	return db.AutoMigrate(&User{})
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
 package risk;
-option go_package = "user-risk-system/shared/proto/risk";
+option go_package = "user-risk-system/proto/risk";
 
 service RiskService {
   rpc CheckRisk(RiskCheckRequest) returns (RiskCheckResponse);

@@ -777,7 +777,7 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\x05Login\x12\x12.user.LoginRequest\x1a\x13.user.LoginResponse\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x12?\n" +
 	"\n" +
-	"UpdateUser\x12\x17.user.UpdateUserRequest\x1a\x18.user.UpdateUserResponseB$Z\"user-risk-system/shared/proto/userb\x06proto3"
+	"UpdateUser\x12\x17.user.UpdateUserRequest\x1a\x18.user.UpdateUserResponseB\x1dZ\x1buser-risk-system/proto/userb\x06proto3"
 
 var (
 	file_proto_user_user_proto_rawDescOnce sync.Once
